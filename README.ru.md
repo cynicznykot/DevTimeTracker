@@ -27,9 +27,9 @@ DevTimeTracker - это полезный инструмент для разра�
 > 
 > # Создание виртуального окружэения
 > python -m venv .venv
-> source .venv/bit/activate  # for Linux System
+> source .venv/bin/activate  # for Linux System
 > 
-> venv./Scripts/activate     # for Windows System
+> venv\Scripts\activate      # for Windows System
 > 
 > # Установка зависимостей
 > 
