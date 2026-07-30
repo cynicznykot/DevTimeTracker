@@ -59,3 +59,112 @@ EDITOR_PATTERNS = {
     # =========================================================================
     "Notepad++": ["Notepad++", "notepad++"],
 }
+
+
+# =============================================================================
+# LANGUAGES CONFIGURATION
+# =============================================================================
+
+EXTENSION_TO_LANGUAGE = {
+    # Python
+    ".py": "Python",
+    ".pyw": "Python",
+    ".pyi": "Python",
+
+    # JavaScript / TypeScript
+    ".js": "JavaScript",
+    ".jsx": "React/JavaScript",
+    ".mjs": "JavaScript",
+    ".ts": "TypeScript",
+    ".tsx": "React/TypeScript",
+
+    # Java / Kotlin
+    ".java": "Java",
+    ".kt": "Kotlin",
+    ".kts": "Kotlin Script",
+
+    # C / C++
+    ".c": "C",
+    ".h": "C/C++ Header",
+    ".cpp": "C++",
+    ".cxx": "C++",
+    ".cc": "C++",
+    ".hpp": "C++ Header",
+
+    # C#
+    ".cs": "C#",
+
+    # Go
+    ".go": "Golang",
+
+    # Rust
+    ".rs": "Rust",
+
+    # Ruby
+    ".rb": "Ruby",
+
+    # PHP
+    ".php": "PHP",
+    ".php3": "PHP",
+    ".php4": "PHP",
+    ".php5": "PHP",
+    ".php7": "PHP",
+    ".php8": "PHP",
+
+    # Swift
+    ".swift": "Swift",
+
+    # Dart
+    ".dart": "Dart",
+
+    # Scala
+    ".scala": "Scala",
+
+    # Web
+    ".html": "HTML",
+    ".htm": "HTML",
+    ".css": "CSS",
+    ".scss": "SASS/SCSS",
+    ".sass": "SASS/SCSS",
+    ".less": "LESS",
+    ".xml": "XML",
+
+    # Data formats
+    ".json": "JSON",
+    ".yaml": "YAML",
+    ".yml": "YAML",
+    ".toml": "TOML",
+
+    # Shell scripts
+    ".sh": "Shell Script",
+    ".bash": "Shell Script",
+    ".zsh": "Shell Script",
+    ".fish": "Shell Script",
+    ".ps1": "PowerShell",
+    ".psm1": "PowerShell",
+
+    # Databases
+    ".sql": "SQL",
+    ".sqlite": "SQLite",
+
+    # Documentation
+    ".md": "Markdown",
+    ".markdown": "Markdown",
+    ".rst": "reStructuredText",
+    ".txt": "Text",
+
+    # Configuration
+    ".cfg": "Configuration",
+    ".conf": "Configuration",
+    ".ini": "Configuration",
+    ".properties": "Properties",
+    ".env": "Environment Variables",
+
+    # Special files (no extension)
+    "Dockerfile": "Dockerfile",
+    "Makefile": "Makefile",
+    "CMakeLists.txt": "CMake",
+    ".gitignore": "Git Ignore",
+    ".dockerignore": "Docker Ignore",
+
+}
