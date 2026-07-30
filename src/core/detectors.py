@@ -1,6 +1,10 @@
+import re
+from typing import Optional, Dict, List
+
 # =============================================================================
 # EDITORS CONFIGURATION
 # =============================================================================
+import re
 
 EDITOR_PATTERNS = {
     # =========================================================================
@@ -168,3 +172,49 @@ EXTENSION_TO_LANGUAGE = {
     ".dockerignore": "Docker Ignore",
 
 }
+
+def detect_editor(window_title):
+    if not window_title:
+        return None
+
+    title_lower = window_title.lower()
+
+    for editor_name, patterns in EDITOR_PATTERNS.items():
+        for pattern in patterns:
+            if pattern.lower() in title_lower:
+                return editor_name
+
+    return None
+
+
+def extract_filename(window_title):
+    if not window_title:
+        return None
+
+    editor = detect_editor(window_title)
+
+    if editor:
+        for pattern in EDITOR_PATTERNS.get(editor, []):
+            if pattern.lower() in window_title.lower():
+                pos = window_title.lower().find(pattern.lower())
+                clean_title = window_title[:pos].strip()
+                clean_title = re.sub(r'[—\-|\[\(].*$', '', clean_title).strip()
+                break
+
+        else:
+            clean_title = re.split(r'[—\-|]', window_title)[0].strip()
+    else:
+        clean_title = window_title
+
+    match = re.search(r'([\w\-]+\.\w+)', clean_title)
+    if match:
+        return match.group(1)
+
+    for special in ["Dockerfile", "Makefile", "CMakeLists.txt"]:
+        if special.lower() in clean_title.lower():
+            return special
+
+    return None
+
+
+
