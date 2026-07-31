@@ -217,4 +217,26 @@ def extract_filename(window_title):
     return None
 
 
+def detect_language_from_filename(filename):
+    if not filename:
+        return None
+
+    if filename in EXTENSION_TO_LANGUAGE:
+        return EXTENSION_TO_LANGUAGE[filename]
+
+    parts = filename.rsplit('.', 1)
+    if len(parts) == 2:
+        extension = '.' + parts[1].lower()
+        return EXTENSION_TO_LANGUAGE.get(extension)
+
+    return None
+
+
+def detect_language(window_title):
+    filename = extract_filename(window_title)
+    if filename:
+        return detect_language_from_filename(filename)
+    return None
+
+
 
