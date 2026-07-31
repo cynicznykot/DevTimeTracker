@@ -25,3 +25,28 @@ class TimeTracker:
         self.is_running = False
         self.current_session: Optional[Session] = None
         self.sessions: list = []  # Temporary repository of time
+
+    def _get_active_editor_info(self):
+        try:
+            windows = gw.getAllWindows()
+            for window in windows:
+                title = window.title
+                if not title:
+                    continue
+                editor = detect_editor(title)
+
+                if editor and window.isActive:
+                    return {
+                        'editor': editor,
+                        'language': detect_language(title),
+                        'file': extract_filename(title),
+                        'title': window.title,
+                        'window': window
+                    }
+
+            return None
+
+        except Exception as e:
+            print(f"⚠️ Error retrieving windows!")
+            return None
+
