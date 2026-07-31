@@ -50,3 +50,44 @@ class TimeTracker:
             print(f"⚠️ Error retrieving windows!")
             return None
 
+    def _tick(self):
+        editor_info = self._get_active_editor_info()
+
+        if editor_info:
+            if self.current_session is None:
+                self._start_session(editor_info)
+            else:
+                self._update_session(editor_info)
+        else:
+            if self.current_session is not None:
+                self._end_session()
+
+    def _start_session(self, editor_info):
+        self.current_session = Session(
+            editor=editor_info['editor'],
+            language=editor_info['language'],
+            file_path=editor_info['file'],
+            start_time=datetime.now()
+        )
+
+        print(f"▶️ Start session: {editor_info['editor']}")
+        if editor_info['file']:
+            print(f"File: {editor_info['file']}")
+        if editor_info['language']:
+            print(f"Language: {editor_info['language']}")
+        print()
+
+    def _end_session(self):
+        if self.current_session is None:
+            return
+
+        self.current_session.end_time = datetime.now()
+        duration = self.current_session.get_duration()
+
+        self.sessions.append(self.current_session)
+
+        print(f"⏹️ Finished Session: {self.current_session.editor}")
+        print(f"Duration: {duration // 60} minutes {duration % 60} seconds")
+        print()
+
+        self.current_session = None
