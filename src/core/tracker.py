@@ -2,6 +2,7 @@ import time
 from datetime import datetime
 from typing import Optional, Dict, Any
 from dataclasses import dataclass, asdict
+from src.storage.json_storage import JsonStorage
 
 import pygetwindow as gw
 
@@ -20,11 +21,13 @@ class Session:
         return int((end - self.start_time).total_seconds())
 
 class TimeTracker:
-    def __init__(self, check_interval: int = 10):
+    def __init__(self, check_interval: int = 10, storage: Optional[JsonStorage] = None):
         self.check_interval = check_interval
         self.is_running = False
         self.current_session: Optional[Session] = None
         self.sessions: list = []  # Temporary repository of time
+        self.storage = storage or JsonStorage()
+        self._load_history()
 
     def _get_active_editor_info(self):
         try:
@@ -77,6 +80,45 @@ class TimeTracker:
             print(f"Language: {editor_info['language']}")
         print()
 
+    def _load_history(self):
+        if self.storage:
+            try:
+                history = self.storage.load_sessions()
+                self.sessions = history
+                print(f"📂 Load {len(history)} from history")
+            except Exception as e:
+                print(f"⚠️ Load story error: {e}")
+                self.sessions = []
+        else:
+            self.sessions = []
+
+    def _show_summary(self):
+        all_sessions = self.sessions.copy()
+
+        if not all_sessions:
+            print("No data for display.")
+            return
+
+        total_time = sum(s.get_duration() for s in all_sessions)
+        hours = total_time // 3600
+        minutes = (total_time % 3600) // 60
+
+        print(f"\n 📊 Total for all time:")
+        print(f" Total Time: {hours}h {minutes}m")
+        print(f" All Sessions: {len(all_sessions)}")
+
+        editor_stats = {}
+        for session in all_sessions:
+            editor = session.editor
+            editor_stats[editor] = editor_stats.get(editor, 0) + session.get_duration()
+
+        if editor_stats:
+            print(f"\n  By editor:")
+            for editor, duration in sorted(editor_stats.items(), key=lambda x: x[1], reverse=True):
+                h = duration // 3600
+                m = (duration % 3600) // 60
+                print(f" {editor}: {h}h {m}m")
+
     def _end_session(self):
         if self.current_session is None:
             return
@@ -85,6 +127,12 @@ class TimeTracker:
         duration = self.current_session.get_duration()
 
         self.sessions.append(self.current_session)
+
+        if self.storage:
+            try:
+                self.storage.save_session(self.current_session)
+            except Exception as e:
+                print(f"⚠️ Save session error: {e}")
 
         print(f"⏹️ Finished Session: {self.current_session.editor}")
         print(f"Duration: {duration // 60} minutes {duration % 60} seconds")
