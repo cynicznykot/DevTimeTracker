@@ -25,9 +25,24 @@ class TimeTracker:
         self.check_interval = check_interval
         self.is_running = False
         self.current_session: Optional[Session] = None
-        self.sessions: list = []  # Temporary repository of time
+        self.sessions: list = []
         self.storage = storage or JsonStorage()
         self._load_history()
+
+    def _log_error(self, context: str, error: Exception):
+        print(f"⚠️ [{context}] {error}")
+
+    def _load_history(self):
+        if self.storage:
+            try:
+                history = self.storage.load_sessions()
+                self.sessions = history
+                print(f"📂 Loaded {len(history)} sessions from history")
+            except Exception as e:
+                self._log_error("load_history", e)
+                self.sessions = []
+        else:
+            self.sessions = []
 
     def _get_active_editor_info(self):
         try:
@@ -50,7 +65,7 @@ class TimeTracker:
             return None
 
         except Exception as e:
-            print(f"⚠️ Error retrieving windows!")
+            self._log_error("get_active_editor_info", e)
             return None
 
     def _tick(self):
@@ -73,51 +88,12 @@ class TimeTracker:
             start_time=datetime.now()
         )
 
-        print(f"▶️ Start session: {editor_info['editor']}")
+        print(f"▶️ Session started: {editor_info['editor']}")
         if editor_info['file']:
             print(f"File: {editor_info['file']}")
         if editor_info['language']:
             print(f"Language: {editor_info['language']}")
         print()
-
-    def _load_history(self):
-        if self.storage:
-            try:
-                history = self.storage.load_sessions()
-                self.sessions = history
-                print(f"📂 Load {len(history)} from history")
-            except Exception as e:
-                print(f"⚠️ Load story error: {e}")
-                self.sessions = []
-        else:
-            self.sessions = []
-
-    def _show_summary(self):
-        all_sessions = self.sessions.copy()
-
-        if not all_sessions:
-            print("No data for display.")
-            return
-
-        total_time = sum(s.get_duration() for s in all_sessions)
-        hours = total_time // 3600
-        minutes = (total_time % 3600) // 60
-
-        print(f"\n 📊 Total for all time:")
-        print(f" Total Time: {hours}h {minutes}m")
-        print(f" All Sessions: {len(all_sessions)}")
-
-        editor_stats = {}
-        for session in all_sessions:
-            editor = session.editor
-            editor_stats[editor] = editor_stats.get(editor, 0) + session.get_duration()
-
-        if editor_stats:
-            print(f"\n  By editor:")
-            for editor, duration in sorted(editor_stats.items(), key=lambda x: x[1], reverse=True):
-                h = duration // 3600
-                m = (duration % 3600) // 60
-                print(f" {editor}: {h}h {m}m")
 
     def _end_session(self):
         if self.current_session is None:
@@ -139,3 +115,83 @@ class TimeTracker:
         print()
 
         self.current_session = None
+
+    def _update_session(self, editor_info):
+        if self.current_session is None:
+            return
+
+        if (self.current_session.file_path != editor_info['file'] or
+            self.current_session.language != editor_info['language']):
+            self._end_session()
+            self._start_session(editor_info)
+
+    def _show_summary(self):
+        all_sessions = self.sessions.copy()
+
+        if not all_sessions:
+            print(f"No sessions found.")
+            return
+
+        total_time = sum(s.get_duration() for s in all_sessions)
+        hours = total_time // 3600
+        minutes = (total_time % 3600) // 60
+
+        print("\n📊 TOTAL STATISTICS:")
+        print(f" Total time: {hours}h {minutes}m")
+        print(f" Total sessions: {len(all_sessions)}")
+
+        daily_stats = {}
+        for session in all_sessions:
+            date = session.start_time.date()
+            daily_stats[date] = daily_stats.get(date, 0) + session.get_duration()
+
+        print("\n📅 By day:")
+        for date, duration in sorted(daily_stats.items(), reverse=True):
+            h = duration // 3600
+            m = (duration % 3600) // 60
+            print(f"   {date}: {h}ч {m}м")
+
+        editor_stats = {}
+        for session in all_sessions:
+            editor = session.editor
+            editor_stats[editor] = editor_stats.get(editor, 0) + session.get_duration()
+
+        if editor_stats:
+            print("\n🖥️ By editor:")
+            for editor, duration in sorted(editor_stats.items(), key=lambda x: x[1], reverse=True):
+                h = duration // 3600
+                m = (duration % 3600) // 60
+                print(f" {editor}: {h}h {m}m")
+
+    def start(self):
+        self.is_running = True
+        print(f"🚀 Tracker is running.")
+        print(f"📊 Inspection interval: {self.check_interval} second")
+        print("Press Ctrl+C for stopping\n")
+
+        try:
+            while self.is_running:
+                self._tick()
+                time.sleep(self.check_interval)
+        except KeyboardInterrupt:
+            self.stop()
+
+    def stop(self):
+        self.is_running = False
+
+        if self.current_session:
+            self._end_session()
+
+        if self.storage and self.sessions:
+            try:
+                self.storage.save_sessions(self.sessions)
+            except Exception as e:
+                print(f"⚠️ Error saving sessions: {e}")
+
+        print(f"\n 👋 Tracker stopped.")
+        print(f"📈 History sessions: {len(self.sessions)}")
+        self._show_summary()
+
+
+
+
