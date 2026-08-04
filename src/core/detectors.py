@@ -10,7 +10,7 @@ EDITOR_PATTERNS = {
     # =========================================================================
     # JetBrains IDE (cross-platform)
     # =========================================================================
-    "PyCharm": ["PyCharm", "pycharm"],
+    "PyCharm": ["PyCharm", "pycharm", "jetbrains-pycharm-ce", "jetbrains-pycharm"],
     "IntelliJ IDEA": ["IntelliJ IDEA", "idea"],
     "WebStorm": ["WebStorm", "webstorm"],
     "PhpStorm": ["PhpStorm", "phpstorm"],

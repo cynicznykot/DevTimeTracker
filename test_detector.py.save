@@ -4,5 +4,7 @@ import subprocess
 result = subprocess.run(['xdotool', 'getwindowname', '12582960'], capture_output=True, text=True)
 title = result.stdout.strip()
 
-print(f'Window name: {title}')
-print(f'Editor: {detect_editor(title)}')
+print(f'Название окна: {title}')
+print(f'Редактор: {detect_editor(title)}')
+
+

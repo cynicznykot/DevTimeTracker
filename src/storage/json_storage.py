@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import List, Optional
 from dataclasses import asdict
 
-from src.core.tracker import Session
+from src.core.models import Session
 
 class JsonStorage:
     def __init__(self, file_path: str = "sessions.json"):
