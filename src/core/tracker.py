@@ -1,10 +1,9 @@
 import time
 from datetime import datetime
-from typing import Optional, Dict, Any
+from typing import Optional
 
 from src.core.window_manager import get_all_windows
 from src.core.detectors import detect_editor, detect_language, extract_filename
-from src.core.models import Session
 from src.storage.json_storage import JsonStorage
 
 
@@ -12,147 +11,72 @@ class TimeTracker:
     def __init__(self, check_interval: int = 10, storage: Optional[JsonStorage] = None):
         self.check_interval = check_interval
         self.is_running = False
-        self.current_session: Optional[Session] = None
-        self.sessions: list = []
+        self.current_editor: Optional[str] = None
+        self.session_start: Optional[datetime] = None
         self.storage = storage or JsonStorage()
-        self._load_history()
+        self._show_today_stats()
 
-    def _log_error(self, context: str, error: Exception):
-        print(f"⚠️ [{context}] {error}")
+    def _show_today_stats(self):
+        today = datetime.now().strftime('%Y-%m-%d')
+        stats = self.storage.get_daily_stats(today)
 
-    def _load_history(self):
-        if self.storage:
-            try:
-                history = self.storage.load_sessions()
-                self.sessions = history
-                print(f"📂 Loaded {len(history)} sessions from history")
-            except Exception as e:
-                self._log_error("load_history", e)
-                self.sessions = []
+        if stats:
+            total = sum(stats.values())
+            hours = total // 3600
+            minutes = (total % 3600) // 60
+            print(f"📊 Today: {hours}ч {minutes}м")
+            for editor, seconds in stats.items():
+                h = seconds // 3600
+                m = (seconds % 3600) // 60
+                print(f"   {editor}: {h}ч {m}м")
         else:
-            self.sessions = []
+            print("📊 Today: 0 minutes")
 
-    def _get_active_editor_info(self):
+    def _get_active_editor(self) -> Optional[str]:
         try:
             windows = get_all_windows()
-
             for window in windows:
                 title = window.title
                 if not title:
                     continue
                 editor = detect_editor(title)
                 if editor:
-                    return {
-                        'editor': editor,
-                        'language': detect_language(title),
-                        'file': extract_filename(title),
-                        'title': window.title,
-                        'window': window
-                    }
+                    return editor
             return None
-
         except Exception as e:
-            self._log_error("get_active_editor_info", e)
+            print(f"⚠️ Error: {e}")
             return None
 
     def _tick(self):
-        editor_info = self._get_active_editor_info()
+        editor = self._get_active_editor()
 
-        if editor_info:
-            if self.current_session is None:
-                self._start_session(editor_info)
-            else:
-                self._update_session(editor_info)
+        if editor:
+            if self.current_editor is None:
+                self.current_editor = editor
+                self.session_start = datetime.now()
+                print(f"▶️ Work in {editor} start")
         else:
-            if self.current_session is not None:
-                self._end_session()
+            if self.current_editor is not None and self.session_start is not None:
 
-    def _start_session(self, editor_info):
-        self.current_session = Session(
-            editor=editor_info['editor'],
-            language=editor_info['language'],
-            file_path=editor_info['file'],
-            start_time=datetime.now()
-        )
+                duration = int((datetime.now() - self.session_start).total_seconds())
 
-        print(f"▶️ Session started: {editor_info['editor']}")
-        if editor_info['file']:
-            print(f"File: {editor_info['file']}")
-        if editor_info['language']:
-            print(f"Language: {editor_info['language']}")
-        print()
+                if duration >= 5:
+                    today = datetime.now().strftime('%Y-%m-%d')
+                    self.storage.add_time(today, self.current_editor, duration)
 
-    def _end_session(self):
-        if self.current_session is None:
-            return
+                    hours = duration // 3600
+                    minutes = (duration % 3600) // 60
+                    print(f"⏹️ Work in {self.current_editor} completed")
+                    print(f"   Time: {hours}h {minutes}m")
+                else:
+                    print(f"⏭️ Short session ({duration}с), losted")
 
-        self.current_session.end_time = datetime.now()
-        duration = self.current_session.get_duration()
-
-        self.sessions.append(self.current_session)
-
-        if self.storage:
-            try:
-                self.storage.save_session(self.current_session)
-            except Exception as e:
-                print(f"⚠️ Save session error: {e}")
-
-        print(f"⏹️ Finished Session: {self.current_session.editor}")
-        print(f"Duration: {duration // 60} minutes {duration % 60} seconds")
-        print()
-
-        self.current_session = None
-
-    def _update_session(self, editor_info):
-        if self.current_session is None:
-            return
-
-        if (self.current_session.file_path != editor_info['file'] or
-            self.current_session.language != editor_info['language']):
-            self._end_session()
-            self._start_session(editor_info)
-
-    def _show_summary(self):
-        all_sessions = self.sessions.copy()
-
-        if not all_sessions:
-            print(f"No sessions found.")
-            return
-
-        total_time = sum(s.get_duration() for s in all_sessions)
-        hours = total_time // 3600
-        minutes = (total_time % 3600) // 60
-
-        print("\n📊 TOTAL STATISTICS:")
-        print(f" Total time: {hours}h {minutes}m")
-        print(f" Total sessions: {len(all_sessions)}")
-
-        daily_stats = {}
-        for session in all_sessions:
-            date = session.start_time.date()
-            daily_stats[date] = daily_stats.get(date, 0) + session.get_duration()
-
-        print("\n📅 By day:")
-        for date, duration in sorted(daily_stats.items(), reverse=True):
-            h = duration // 3600
-            m = (duration % 3600) // 60
-            print(f"   {date}: {h}ч {m}м")
-
-        editor_stats = {}
-        for session in all_sessions:
-            editor = session.editor
-            editor_stats[editor] = editor_stats.get(editor, 0) + session.get_duration()
-
-        if editor_stats:
-            print("\n🖥️ By editor:")
-            for editor, duration in sorted(editor_stats.items(), key=lambda x: x[1], reverse=True):
-                h = duration // 3600
-                m = (duration % 3600) // 60
-                print(f" {editor}: {h}h {m}m")
+                self.current_editor = None
+                self.session_start = None
 
     def start(self):
         self.is_running = True
-        print(f"🚀 Tracker is running.")
+        print("🚀 Tracker start")
         print(f"📊 Inspection interval: {self.check_interval} second")
         print("Press Ctrl+C for stopping\n")
 
@@ -166,17 +90,12 @@ class TimeTracker:
     def stop(self):
         self.is_running = False
 
-        if self.current_session:
-            self._end_session()
+        if self.current_editor is not None and self.session_start is not None:
+            duration = int((datetime.now() - self.session_start).total_seconds())
+            if duration >= 5:
+                today = datetime.now().strftime('%Y-%m-%d')
+                self.storage.add_time(today, self.current_editor, duration)
+                print(f"⏹️ Work in {self.current_editor} completed")
 
-        if self.storage and self.sessions:
-            try:
-                self.storage.save_sessions(self.sessions)
-            except Exception as e:
-                print(f"⚠️ Error saving sessions: {e}")
-
-        print(f"\n 👋 Tracker stopped.")
-        print(f"📈 History sessions: {len(self.sessions)}")
-        self._show_summary()
-
-
+        print("\n👋 Tracker stopped")
+        self._show_today_stats()

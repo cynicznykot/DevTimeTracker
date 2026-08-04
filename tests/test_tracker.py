@@ -1,5 +1,11 @@
 from src.core.tracker import TimeTracker
 
-tracker = TimeTracker(check_interval=3)
+def main():
+    tracker = TimeTracker(check_interval=10)
+    tracker.start()
 
-tracker.start()
+if __name__ == "__main__":
+    main()
+
+
+
