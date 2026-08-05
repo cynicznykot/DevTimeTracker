@@ -47,3 +47,15 @@ class JsonStorage:
         for day in data.get('daily_stats', {}).values():
             total += sum(day.values())
         return total
+
+    def get_all_stats(self):
+        data = self.load_all()
+        total_stats = {}
+
+        for day in data.get('daily_stats', {}).values():
+            for editor, seconds in day.items():
+                if editor not in total_stats:
+                    total_stats[editor] = 0
+                total_stats[editor] += seconds
+
+        return total_stats

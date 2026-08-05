@@ -32,6 +32,26 @@ class TimeTracker:
         else:
             print("📊 Today: 0 minutes")
 
+    def _show_all_stats(self):
+        stats = self.storage.get_all_stats()
+
+        if not stats:
+            print("📊 No data all time")
+            return
+
+        total = sum(stats.values())
+        hours = total // 3600
+        minutes = (total % 3600) // 60
+
+        print(f"\n📊 TOTAL ALL TIME:")
+        print(f" All time: {hours}h {minutes}m")
+
+        print("\n By editor:")
+        for editor, seconds in sorted(stats.items(), key=lambda x: x[1], reverse=True):
+            h = seconds // 3600
+            m = (seconds % 3600) // 60
+            print(f" {editor}: {h}h {m}m")
+
     def _get_active_editor(self) -> Optional[str]:
         try:
             windows = get_all_windows()
@@ -76,6 +96,10 @@ class TimeTracker:
 
     def start(self):
         self.is_running = True
+
+        self._show_all_stats()
+        print()
+
         print("🚀 Tracker start")
         print(f"📊 Inspection interval: {self.check_interval} second")
         print("Press Ctrl+C for stopping\n")
@@ -98,4 +122,5 @@ class TimeTracker:
                 print(f"⏹️ Work in {self.current_editor} completed")
 
         print("\n👋 Tracker stopped")
-        self._show_today_stats()
+
+        self._show_all_stats()
