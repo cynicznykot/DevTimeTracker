@@ -13,8 +13,6 @@ class Window:
 
 def _get_windows_linux():
     try:
-        subprocess.run(['xdotool', '--version'], capture_output=True, check=True)
-
         result = subprocess.run(
             ['xdotool', 'search', '--name', '.*'],
             capture_output=True,
