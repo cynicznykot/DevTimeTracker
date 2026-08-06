@@ -1,5 +1,6 @@
 import sys
 import argparse
+import subprocess
 from src.core.tracker import TimeTracker
 from src.storage.json_storage import JsonStorage
 
@@ -92,5 +93,20 @@ def _show_stats(storage: JsonStorage, days: int):
             sm = (seconds % 3600) // 60
             print(f" {editor}: {sh}h {sm}m")
 
+
+def _show_status():
+    result = subprocess.run(['pgrep', '-f', 'tracker'], capture_output=True)
+
+    if result.returncode == 0:
+        pids = result.stdout.decode().strip().split('\n')
+        print("✅ Tracker is running")
+        print(f" PID: {', '.join(pids)}")
+    else:
+        print("❌ Tracker is not running")
+        print(" Start with: devtime start")
+
+
+if __name__ == "__main__":
+    main()
 
 
