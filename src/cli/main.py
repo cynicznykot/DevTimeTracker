@@ -47,3 +47,50 @@ def main():
 
     else:
         parser.print_help()
+
+def _show_stats(storage: JsonStorage, days: int):
+    all_data = storage.load_all()
+    daily_stats = all_data.get('daily_stats', {})
+
+    if not daily_stats:
+        print("📊 No data yet. Tracker hasn't been used.")
+        return
+
+    total_editor_stats = {}
+    for date, editors in daily_stats.items():
+        for editor, seconds in editors.items():
+            if editor not in total_editor_stats:
+                total_editor_stats[editor] = 0
+            total_editor_stats[editor] += seconds
+
+    print("\n📊 STATISTICS FOR ALL TIME")
+    print("=" * 40)
+    total = sum(total_editor_stats.values())
+    hours = total // 3600
+    minutes = (total % 3600) // 60
+
+    print(f"Total time: {hours}h {minutes}m")
+    print("\nBy editor:")
+    for editor, seconds in sorted(total_editor_stats.items(),
+                                  key=lambda x: x[1], reverse=True):
+        h = seconds // 3600
+        m = (seconds % 3600) // 60
+        print(f" {editor}: {h}h {m}m")
+
+    print(f"\n📅 LAST {days} DAYS")
+    print("=" * 40)
+
+    sorted_dates = sorted(daily_stats.keys(), reverse=True)[:days]
+    for date in sorted_dates:
+        editors = daily_stats[date]
+        total_day = sum(editors.values())
+        h = total_day // 3600
+        m = (total_day % 3600) // 60
+        print(f"{date}: {h}h {m}m")
+        for editor, seconds in editors.items():
+            sh = seconds // 3600
+            sm = (seconds % 3600) // 60
+            print(f" {editor}: {sh}h {sm}m")
+
+
+
