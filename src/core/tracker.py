@@ -43,32 +43,31 @@ class TimeTracker:
         session_start (Optional[datetime]): Start time of the current session.
         storage (JsonStorage): Storage for saving statistics.
     """
-    
+
     def __init__(self, check_interval: int = 10, storage: Optional[JsonStorage] = None):
+        """
+        Initialize the time tracker.
+
+        Args:
+            check_interval: How often to check for active windows (seconds).
+                            Default is 10 seconds.
+            storage: Optional custom storage instance. If not provided,
+                    a default JsonStorage will be created.
+        """
         self.check_interval = check_interval
         self.is_running = False
         self.current_editor: Optional[str] = None
         self.session_start: Optional[datetime] = None
         self.storage = storage or JsonStorage()
-        self._show_today_stats()
 
-    def _show_today_stats(self):
-        today = datetime.now().strftime('%Y-%m-%d')
-        stats = self.storage.get_daily_stats(today)
 
-        if stats:
-            total = sum(stats.values())
-            hours = total // 3600
-            minutes = (total % 3600) // 60
-            print(f"📊 Today: {hours}ч {minutes}м")
-            for editor, seconds in stats.items():
-                h = seconds // 3600
-                m = (seconds % 3600) // 60
-                print(f"   {editor}: {h}ч {m}м")
-        else:
-            print("📊 Today: 0 minutes")
+    def _show_all_stats(self) -> None:
+        """
+        Display total statistics for all time.
 
-    def _show_all_stats(self):
+        This method retrieves and displays the complete work statistics
+        for all time, including total time per editor.
+        """
         stats = self.storage.get_all_stats()
 
         if not stats:
@@ -89,6 +88,16 @@ class TimeTracker:
             print(f" {editor}: {h}h {m}m")
 
     def _get_active_editor(self) -> Optional[str]:
+        """
+        Detect the currently active code editor.
+
+        This method scans all open windows and returns the name of the
+        first editor window found. It uses detect_editor() from the
+        detectors module.
+
+        Returns:
+            The name of the active editor or None if no editor is found.
+        """
         try:
             windows = get_all_windows()
             for window in windows:
