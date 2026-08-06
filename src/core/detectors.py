@@ -1,10 +1,20 @@
+"""
+Editor and language detection module.
+
+This module provides functions to identify code editors and programming
+languages from window titles and file extensions.
+
+It uses pattern matching to detect editors like PyCharm, VS Code, Intellij,
+and many others, and maps file extensions to programming languages.
+
+"""
+
 import re
 from typing import Optional, Dict, List
 
 # =============================================================================
 # EDITORS CONFIGURATION
 # =============================================================================
-import re
 
 EDITOR_PATTERNS = {
     # =========================================================================
@@ -173,7 +183,19 @@ EXTENSION_TO_LANGUAGE = {
 
 }
 
-def detect_editor(window_title):
+def detect_editor(window_title: str):
+    """
+    Detect the code editor from the window title.
+
+    The function checks the window title against a list of known editor
+    patterns. It's case-insensitive and return the first matching editor.
+
+    Args:
+        window_title: The window title string to analyze.
+
+    Returns:
+        The name of the detected editor or None if no match found.
+    """
     if not window_title:
         return None
 
@@ -187,29 +209,56 @@ def detect_editor(window_title):
     return None
 
 
-def extract_filename(window_title):
+def extract_filename(window_title: str):
+    """
+    Extract the filename from a window title.
+
+    This function removes editor information from the window title and
+    attempt to find a filename with an extension. It handles, various
+    title formats used by different editors.
+
+    Supported formats:
+        - "main.py - PyCharm" -> "main.py"
+        - "index.js - Visual Studio Code" -> "index.js"
+        - "README.md [GitHub] - VS Code" -> "README.md"
+        - "server.go (project) - GoLand" -> "server.go"
+
+    Args:
+        window_title: The window title string.
+
+    Returns:
+        The extracted filename with extension or None if not found.
+    """
     if not window_title:
         return None
 
     editor = detect_editor(window_title)
 
     if editor:
+        # Remove the editor name from the window title
         for pattern in EDITOR_PATTERNS.get(editor, []):
             if pattern.lower() in window_title.lower():
+                # Find where the editor pattern starts in the title
                 pos = window_title.lower().find(pattern.lower())
+                # Extract everything before the editor pattern
                 clean_title = window_title[:pos].strip()
+                # Remove common separators and brackets
                 clean_title = re.sub(r'[—\-|\[\(].*$', '', clean_title).strip()
                 break
 
         else:
+            # Fallback: split by common separators
             clean_title = re.split(r'[—\-|]', window_title)[0].strip()
     else:
+        # If no editor is detected, use the title as is
         clean_title = window_title
 
+    # Look for a filename with extension
     match = re.search(r'([\w\-]+\.\w+)', clean_title)
     if match:
         return match.group(1)
 
+    # Check for special files that don't have extensions
     for special in ["Dockerfile", "Makefile", "CMakeLists.txt"]:
         if special.lower() in clean_title.lower():
             return special
@@ -218,12 +267,26 @@ def extract_filename(window_title):
 
 
 def detect_language_from_filename(filename):
+    """
+    Detect the programming language from a filename.
+
+    The function checks the file extension against a mapping of extensions
+    to language names. It also handles special files like Dockerfile.
+
+    Args:
+        filename: The filename string to analyze.
+
+    Returns:
+        The name of the programming language or None if not found.
+    """
     if not filename:
         return None
 
+    # Check for special files that don't have extensions
     if filename in EXTENSION_TO_LANGUAGE:
         return EXTENSION_TO_LANGUAGE[filename]
 
+    # Extract the file extension
     parts = filename.rsplit('.', 1)
     if len(parts) == 2:
         extension = '.' + parts[1].lower()
@@ -232,7 +295,19 @@ def detect_language_from_filename(filename):
     return None
 
 
-def detect_language(window_title):
+def detect_language(window_title: str):
+    """
+    Detect the programming language from a window title.
+
+    This function extracts the filename from the window title and then
+    determines the programming language from the file extension.
+
+    Args:
+        window_title: The window title string.
+
+    Returns:
+        The name of the programming language or None if not found.
+    """
     filename = extract_filename(window_title)
     if filename:
         return detect_language_from_filename(filename)
