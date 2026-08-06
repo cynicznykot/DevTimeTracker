@@ -1,13 +1,49 @@
+"""
+Time tracking core module.
+
+This module contains the main TimeTracker class that monitors user activity
+in code editors and tracks the spent on different programming tasks.
+
+It integrates with:
+- Window manager to detect active windows
+- Detector module to identify editors and languages
+- Storage module to persist session data
+
+Example:
+    >>> from src.core.tracker import TimeTracker
+    >>> tracker = TimeTracker(check_interval=10)
+    >>> tracker.start()
+"""
+
 import time
 from datetime import datetime
 from typing import Optional
 
 from src.core.window_manager import get_all_windows
-from src.core.detectors import detect_editor, detect_language, extract_filename
+from src.core.detectors import detect_editor
 from src.storage.json_storage import JsonStorage
 
 
 class TimeTracker:
+    """
+    Main time tracking class.
+
+    This class monitors active windows to detect when the user is working
+    in a code editor. It tracks time spent in editors and saves statistics
+    to persistent storage.
+
+    The tracker works by periodically checking active windows and recording
+    sessions. A session begins when an editor window becomes active and ends
+    when the user closes or minimizes the editor.
+
+    Attributes:
+        check_interval (int): How often to check for active windows (seconds).
+        is_running (bool): Flag indicating if the tracker is currently running.
+        current_editor (Optional[str]): Name of the currently active editor.
+        session_start (Optional[datetime]): Start time of the current session.
+        storage (JsonStorage): Storage for saving statistics.
+    """
+    
     def __init__(self, check_interval: int = 10, storage: Optional[JsonStorage] = None):
         self.check_interval = check_interval
         self.is_running = False
