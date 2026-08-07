@@ -33,16 +33,46 @@ from typing import Dict
 
 
 class JsonStorage:
+    """
+    JSON-based storage for time tracking statistics.
+
+    This class handles reading and writing statistics to a JSON file.
+    Data is stored as daily stats per edition, allowing for easy querying
+    and aggregation.
+
+    Attributes:
+        file_path (str): Path to the JSON file.
+    """
     def __init__(self, file_path: str = "sessions.json"):
+        """ Initialize the JSON storage.
+
+        Args:
+            file_path: Path to the JSON file. Default is 'sessions.json'
+        """
+
         self.file_path = file_path
         self._ensure_file_exists()
 
-    def _ensure_file_exists(self):
+    def _ensure_file_exists(self) -> None:
+        """
+        Create the JSON file with default structure if it doesn't exist.
+
+        If the file doesn't exist, creates it with an empty daily_stats
+        structure: {"daily_stats": {}}
+        """
+        
         if not os.path.exists(self.file_path):
             with open(self.file_path, 'w', encoding='utf-8') as f:
                 json.dump({"daily_stats": {}}, f, indent=2, ensure_ascii=False)
 
-    def _save_data(self, data):
+    def _save_data(self, data: dict) -> None:
+        """
+        Save data to the JSON file.
+
+        Args:
+            data: Dictionary constaining the statistics data.
+        """
+
         with open(self.file_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
