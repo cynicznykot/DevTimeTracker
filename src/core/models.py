@@ -27,7 +27,7 @@ class Session:
     end_time: Optional[datetime] = None
     # Timestamp when the session ended (None if still active).
 
-    def get_duration(self):
+    def get_duration(self) -> int:
         """
         Calculate the duration of the session in seconds.
 
