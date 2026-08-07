@@ -71,21 +71,21 @@ class TimeTracker:
         stats = self.storage.get_all_stats()
 
         if not stats:
-            print("📊 No data all time")
+            print("📊 No data all time.")
             return
 
         total = sum(stats.values())
         hours = total // 3600
         minutes = (total % 3600) // 60
 
-        print(f"\n📊 TOTAL ALL TIME:")
-        print(f" All time: {hours}h {minutes}m")
+        print(f"\n📊 TOTAL STATISTICS FOR ALL TIME:")
+        print(f"Total time: {hours}h {minutes}m")
 
-        print("\n By editor:")
+        print("\nBy editor:")
         for editor, seconds in sorted(stats.items(), key=lambda x: x[1], reverse=True):
             h = seconds // 3600
             m = (seconds % 3600) // 60
-            print(f" {editor}: {h}h {m}m")
+            print(f"{editor}: {h}h {m}m")
 
     def _get_active_editor(self) -> Optional[str]:
         """
@@ -108,11 +108,10 @@ class TimeTracker:
                 if editor:
                     return editor
             return None
-        except Exception as e:
-            print(f"⚠️ Error: {e}")
+        except Exception:
             return None
 
-    def _tick(self):
+    def _tick(self) -> None:
         """
         Perform one tracking tick.
 
@@ -143,15 +142,15 @@ class TimeTracker:
 
                     hours = duration // 3600
                     minutes = (duration % 3600) // 60
-                    print(f"⏹️ Work in {self.current_editor} completed")
-                    print(f"   Time: {hours}h {minutes}m")
+                    print(f"⏹️ Work in {self.current_editor} finished")
+                    print(f"Duration: {hours}h {minutes}m")
                 else:
-                    print(f"⏭️ Short session ({duration}с), losted")
+                    print(f"⏭️ Session too short ({duration}s), skipped")
 
                 self.current_editor = None
                 self.session_start = None
 
-    def start(self):
+    def start(self) -> None:
         """
         Start the time tracker.
 
@@ -167,8 +166,8 @@ class TimeTracker:
         print()
 
         print("🚀 Tracker start")
-        print(f"📊 Inspection interval: {self.check_interval} second")
-        print("Press Ctrl+C for stopping\n")
+        print(f"📊 Check interval: {self.check_interval} seconds")
+        print("Press Ctrl+C to stop\n")
 
         try:
             while self.is_running:
@@ -177,7 +176,7 @@ class TimeTracker:
         except KeyboardInterrupt:
             self.stop()
 
-    def stop(self):
+    def stop(self) -> None:
         """
         Stop the time tracker.
 
@@ -195,7 +194,7 @@ class TimeTracker:
             if duration >= 5:
                 today = datetime.now().strftime('%Y-%m-%d')
                 self.storage.add_time(today, self.current_editor, duration)
-                print(f"⏹️ Work in {self.current_editor} completed")
+                print(f"⏹️ Work in {self.current_editor} finished")
 
         print("\n👋 Tracker stopped")
 
