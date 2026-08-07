@@ -173,3 +173,17 @@ class JsonStorage:
                 total_stats[editor] += seconds
 
         return total_stats
+
+    def clear(self) -> None:
+        """
+        Clear all statistics data.
+
+        This resets the storage to its initial empty state.
+
+        Example:
+            >>> storage = JsonStorage()
+            >>> storage.clear()
+            >>> storage.get_all_stats()
+            {}
+        """
+        self._save_data({"daily_stats": {}})
