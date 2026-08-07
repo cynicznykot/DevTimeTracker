@@ -1,3 +1,31 @@
+"""
+JSON storage module for session persistence.
+
+This module provides a simple JSON-based storage backend for saving
+and loading time tracking statistics. Data is stored in a human-readable
+JSON file with a structure optimized for daily statistics.
+
+File structure:
+    {
+        "daily_stats": {
+            "2026-08-07": {
+                "PyCharm": 3600,
+                "VS Code": 1800
+            },
+            "2026-08-06": {
+                "PyCharmd":7200
+            }
+        }
+    }
+
+Example:
+    >>> from src.storage.json_storage import JsonStorage
+    >>> storage = JsonStorage()
+    >>> storage.add_time("2026-08-07", "PyCharm", 3600)
+    >>> stats = storage.get_daily_stats("2026-08-07")
+    >>> print(stats)  # {'PyCharm': 3600}
+"""
+
 import json
 import os
 from datetime import datetime
