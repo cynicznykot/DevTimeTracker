@@ -16,7 +16,7 @@ from typing import Optional, Dict, List
 # EDITORS CONFIGURATION
 # =============================================================================
 
-EDITOR_PATTERNS = {
+EDITOR_PATTERNS: Dict[str, List[str]] = {
     # =========================================================================
     # JetBrains IDE (cross-platform)
     # =========================================================================
@@ -42,7 +42,7 @@ EDITOR_PATTERNS = {
     "Visual Studio": [
         "Microsoft Visual Studio",
         "Visual Studio",
-        "devenv"  # Executable name
+        "devenv"
     ],
 
     # =========================================================================
@@ -79,7 +79,7 @@ EDITOR_PATTERNS = {
 # LANGUAGES CONFIGURATION
 # =============================================================================
 
-EXTENSION_TO_LANGUAGE = {
+EXTENSION_TO_LANGUAGE: Dict[str, str] = {
     # Python
     ".py": "Python",
     ".pyw": "Python",
@@ -183,7 +183,12 @@ EXTENSION_TO_LANGUAGE = {
 
 }
 
-def detect_editor(window_title: str):
+
+# ===========================================================================
+# DETECTION FUNCTIONS
+# ===========================================================================
+
+def detect_editor(window_title: str) -> Optional[str]:
     """
     Detect the code editor from the window title.
 
@@ -195,6 +200,14 @@ def detect_editor(window_title: str):
 
     Returns:
         The name of the detected editor or None if no match found.
+
+    Examples:
+        >>> detect_editor("main.pu - PyCharm")
+        'PyCharm'
+        >>> detect_editor("index.js - Visual Studio Code")
+        'VS Code'
+        >>> detect_editor("Calculator")
+        None
     """
     if not window_title:
         return None
@@ -209,7 +222,7 @@ def detect_editor(window_title: str):
     return None
 
 
-def extract_filename(window_title: str):
+def extract_filename(window_title: str) -> Optional[str]:
     """
     Extract the filename from a window title.
 
@@ -228,6 +241,14 @@ def extract_filename(window_title: str):
 
     Returns:
         The extracted filename with extension or None if not found.
+
+    Examples:
+        >>> extract_filename("main.py - PyCharm")
+        'main.py'
+        >>> extract_filename("Untitled-1 - PyCharm")
+        None
+        >>> extract_filename("Dockerfile - VS Code")
+        'Dockerfile'
     """
     if not window_title:
         return None
@@ -266,7 +287,7 @@ def extract_filename(window_title: str):
     return None
 
 
-def detect_language_from_filename(filename):
+def detect_language_from_filename(filename: str) -> Optional[str]:
     """
     Detect the programming language from a filename.
 
@@ -278,6 +299,16 @@ def detect_language_from_filename(filename):
 
     Returns:
         The name of the programming language or None if not found.
+
+    Examples:
+        >>> detect_language_from_filename("main.py")
+        'Python'
+        >>> detect_language_from_filename("app.js")
+        'JavaScript'
+        >>> detect_language_from_filename("Dockerfile")
+        'Dockerfile'
+        >>> detect_language_from_filename("file.xyz")
+        None
     """
     if not filename:
         return None
@@ -295,7 +326,7 @@ def detect_language_from_filename(filename):
     return None
 
 
-def detect_language(window_title: str):
+def detect_language(window_title: str) -> Optional[str]:
     """
     Detect the programming language from a window title.
 
@@ -307,6 +338,14 @@ def detect_language(window_title: str):
 
     Returns:
         The name of the programming language or None if not found.
+
+    Examples:
+        >>> detect_language("main.py - PyCharm")
+        'Python'
+        >>> detect_language("app.js - Visual Studio Code")
+        'JavaScript'
+        >>> detect_language("Untitled-1 - PyCharm")
+        None
     """
     filename = extract_filename(window_title)
     if filename:
