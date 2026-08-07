@@ -53,6 +53,10 @@ def _get_windows_linux() -> List[Window]:
         sudo apt-get install xdotool
     """
     try:
+        # Verify xdotool is installed
+        subprocess.run(['xdotool', '--version'], capture_output=True, check=True)
+
+        # Get all window IDs
         result = subprocess.run(
             ['xdotool', 'search', '--name', '.*'],
             capture_output=True,
@@ -66,6 +70,7 @@ def _get_windows_linux() -> List[Window]:
         window_ids = result.stdout.strip().split('\n')
         windows = []
 
+        # Get the active window ID
         active_result = subprocess.run(
             ['xdotool', 'getactivewindow'],
             capture_output=True,
@@ -78,6 +83,7 @@ def _get_windows_linux() -> List[Window]:
             if not window_id:
                 continue
 
+            # Get the window title
             title_result = subprocess.run(
                 ['xdotool', 'getwindowname', window_id],
                 capture_output=True,
@@ -98,6 +104,7 @@ def _get_windows_linux() -> List[Window]:
         return windows
 
     except (subprocess.CalledProcessError, FileNotFoundError):
+        # xdotool not installed or failed
         return []
 
 
