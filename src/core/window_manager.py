@@ -108,7 +108,19 @@ def _get_windows_linux() -> List[Window]:
         return []
 
 
-def _get_windows_windows():
+def _get_windows_windows() -> List[Window]:
+    """
+    Get all windows on Windows using pygetwindow.
+
+    This function uses the pygetwindow library to query window information.
+
+    Returns:
+        List of Window objects for all windows found.
+
+    Note:
+        Requires pygetwindow to be installed:
+        pip install pygetwindow
+    """
     try:
         import pygetwindow as gw
 
@@ -126,14 +138,32 @@ def _get_windows_windows():
         return []
 
 
-def _get_windows_macos():
+def _get_windows_macos() -> List[Window]:
+    """
+    Get all windows on macOS using AppleScript.
+
+    This function uses AppleScript to query window information.
+
+    Returns:
+        List of Window objects for all windows found.
+
+    Note:
+        This function is currently a stub. Full AppleScript parsing
+        will be implemented in a future update.
+    """
     try:
         script = '''
         tell application "System Events"
-            get name of every window of every process
-        and tell
-        
+            set windowList to {}
+            repeat with proc in (every process)
+                repeat with win in (windows of proc)
+                    set end of windowList to {process:name of proc, title:name of win}
+                end repeat
+            end repeat
+            return windowList
+        end tell        
         '''
+
         result = subprocess.run(
             ['osascript', '-e', script],
             capture_output=True,
@@ -144,13 +174,30 @@ def _get_windows_macos():
         if result.returncode != 0 or not result.stdout:
             return []
 
+        # TODO: Implement proper parsing of AppleScript output
+        # For now, return empty list
         return []
 
     except (subprocess.CalledProcessError, FileNotFoundError):
         return []
 
 
-def get_all_windows():
+def get_all_windows() -> List[Window]:
+    """
+    Get all windows on the current operating system.
+
+    This function automatically detects the platform and uses the
+    appropriate backend to retrieve window information.
+
+    Returns:
+        List of Window objects for all windows found.
+        Returns empty list if no windows found or on unsupported platforms.
+
+    Example:
+        >>> windows = get_all_windows()
+        >>> print(f"Found {len(windows)} windows")
+    """
+
     system = sys.platform
 
     if system == 'linux':
@@ -160,10 +207,24 @@ def get_all_windows():
     elif system == 'darwin':
         return _get_windows_macos()
     else:
+        # unsupported platform
         return []
 
 
-def get_active_windows():
+def get_active_windows() -> Optional[Window]:
+    """
+    Get the currently active window.
+
+    This function returns the window that currently has focus.
+
+    Returns:
+        The active Window object or None if not found.
+
+    Example:
+        >>> active = get_active_windows()
+        >>> if active:
+        ...     print(f"Active window: {active.title}")
+    """
     windows = get_all_windows()
     for window in windows:
         if window.isActive:
