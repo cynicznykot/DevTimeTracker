@@ -1,3 +1,22 @@
+"""
+Cross-platform window management module.
+
+This module provides a unified interface for window detection across
+different operating system. It automatically selects the appropriate
+backed based on the current platform.
+
+Supported platforms:
+- Linux: Uses xdotool (requires installation)
+- Windows: Uses pygetwindow library
+- macOS: Uses appleScript( native)
+
+Example:
+    >>> from src.core.window_manager import get_all_windows, Window
+    >>> windows = get_all_windows()
+    >>> for win in windows:
+    ...     print(f"{win.title} (active: {win.isActive})")
+"""
+
 import sys
 import subprocess
 from typing import List, Optional
@@ -6,12 +25,33 @@ from dataclasses import dataclass
 
 @dataclass
 class Window:
+    """
+    Represents a system windows.
+
+    Attributes:
+        window_id: Unique identifier for the window.
+        title: Window title text/
+        isActive: Whether the window is currently in focus.
+    """
     window_id: str
     title: str
     isActive: bool = False
 
 
-def _get_windows_linux():
+def _get_windows_linux() -> List[Window]:
+    """
+    Get all windows on Linux using xdotool.
+
+    This function uses the xdotool command-line tool to query window
+    information. It returns a list of all visible windows.
+
+    Returns:
+        List of Window objects for all windows found.
+
+    Note:
+        Requires xdotool to be installed:
+        sudo apt-get install xdotool
+    """
     try:
         result = subprocess.run(
             ['xdotool', 'search', '--name', '.*'],
