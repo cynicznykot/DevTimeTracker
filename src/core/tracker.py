@@ -113,19 +113,31 @@ class TimeTracker:
             return None
 
     def _tick(self):
+        """
+        Perform one tracking tick.
+
+        This method checks the active editor and manages the current session:
+        - If an editor is found and no session exists, start a new session.
+        - If an editor is found and a session exists, continue tracking.
+        - If no editor is found and a session exists, end the session.
+        """
         editor = self._get_active_editor()
 
         if editor:
+            # Editor is open
             if self.current_editor is None:
+                # Start a new session
                 self.current_editor = editor
                 self.session_start = datetime.now()
                 print(f"▶️ Work in {editor} start")
         else:
+            # Editor is closed
             if self.current_editor is not None and self.session_start is not None:
 
+                # End the current session
                 duration = int((datetime.now() - self.session_start).total_seconds())
 
-                if duration >= 5:
+                if duration >= 5:  # Minimum session duration (seconds)
                     today = datetime.now().strftime('%Y-%m-%d')
                     self.storage.add_time(today, self.current_editor, duration)
 
@@ -140,6 +152,15 @@ class TimeTracker:
                 self.session_start = None
 
     def start(self):
+        """
+        Start the time tracker.
+
+        This method begins the tracking loop. It displays initial statistics
+        and continues tracking until stopped by the user (Ctrl+C).
+
+        The tracker wil check for active windows at regular intervals
+        defined by check_interval.
+        """
         self.is_running = True
 
         self._show_all_stats()
@@ -157,8 +178,18 @@ class TimeTracker:
             self.stop()
 
     def stop(self):
+        """
+        Stop the time tracker.
+
+        This method ends the tracking loop, finishes any active session
+        and displays final statistics.
+
+        If there is an active session, it will be automatically completed
+        and saved to storage.
+        """
         self.is_running = False
 
+        # Complete the current session if it exists
         if self.current_editor is not None and self.session_start is not None:
             duration = int((datetime.now() - self.session_start).total_seconds())
             if duration >= 5:
