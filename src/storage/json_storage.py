@@ -60,7 +60,7 @@ class JsonStorage:
         If the file doesn't exist, creates it with an empty daily_stats
         structure: {"daily_stats": {}}
         """
-        
+
         if not os.path.exists(self.file_path):
             with open(self.file_path, 'w', encoding='utf-8') as f:
                 json.dump({"daily_stats": {}}, f, indent=2, ensure_ascii=False)
@@ -76,14 +76,46 @@ class JsonStorage:
         with open(self.file_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
-    def load_all(self):
+    def load_all(self) -> dict:
+        """
+        Load all data from the JSON file.
+
+        Returns:
+            Dictionary containing all statistics data.
+            If file doesn't exist or is corrupted, returns {"daily_stats": {}}
+
+        Example:
+            >>> storage = JsonStorage()
+            >>> data = storage.load_all()
+            >>> data.keys()
+            dict_keys(['daily_stats'])
+        """
+
         try:
             with open(self.file_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except (FileNotFoundError, json.JSONDecodeError):
             return {"daily_stats": {}}
 
-    def add_time(self, date: str, editor: str, seconds: int):
+    def add_time(self, date: str, editor: str, seconds: int) -> None:
+        """
+        Add time ti the daily statistics for a specific editor.
+
+        This method adds the specified seconds to the editor's total
+        for the given date. If the date of editor doesn't exist,
+        they are created automatically.
+
+        Args:
+            date: Date string in format 'YYYY-MM-DD'.
+            editor: Name of the editor (e.g., 'PyCharm').
+            seconds: Number of seconds to add.
+
+        Example:
+            >>> storage = JsonStorage()
+            >>> storage.add_time("2026-08-07", "PyCharm", 3600)
+            # Adds 1 hour of PyCharm time for today
+        """
+
         data = self.load_all()
 
         if date not in data['daily_stats']:
@@ -96,17 +128,41 @@ class JsonStorage:
         self._save_data(data)
 
     def get_daily_stats(self, date: str) -> Dict[str, int]:
+        """
+        Get statistics for a specific day.
+
+        Args:
+            date: Date string in format 'YYYY-MM-DD'
+
+        Returns:
+            Dictionary mapping editor names to total seconds for that date.
+            Returns empty dict if date has no data.
+
+        Example:
+            >>> storage = JsonStorage()
+            >>> stats = storage.get_daily_stats("2026-08-07")
+            >>> stats
+            {'PyCharm': 3600, 'VS Code':1800}
+        """
+
         data = self.load_all()
         return data.get('daily_stats', {}).get(date, {})
 
-    def get_total_time(self) -> int:
-        data = self.load_all()
-        total = 0
-        for day in data.get('daily_stats', {}).values():
-            total += sum(day.values())
-        return total
+    def get_all_stats(self) -> Dict[str, int]:
+        """
+        Get total statistics for all time, aggregated by editor.
 
-    def get_all_stats(self):
+        This method sums up all the spent in each editor across all dates.
+
+        Returns:
+            Dictionary mapping editor names to total seconds across all time.
+
+        Example:
+            >>> storage = JsonStorage()
+            >>> stats = storage.get_all_stats()
+            >>> stats{'PyCharm': 7200, 'VS Code': 5400}
+        """
+
         data = self.load_all()
         total_stats = {}
 
