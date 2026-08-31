@@ -1,6 +1,8 @@
 import sys
 import argparse
 import subprocess
+import platform
+import subprocess
 from src.core.tracker import TimeTracker
 from src.storage.json_storage import JsonStorage
 
@@ -95,15 +97,32 @@ def _show_stats(storage: JsonStorage, days: int):
 
 
 def _show_status():
-    result = subprocess.run(['pgrep', '-f', 'tracker'], capture_output=True)
+    system = platform.system()
 
-    if result.returncode == 0:
-        pids = result.stdout.decode().strip().split('\n')
-        print("✅ Tracker is running")
-        print(f" PID: {', '.join(pids)}")
+    if system == "Windows":
+        result = subprocess.run(
+            ['tasklist', '/FI', 'IMAGENAME eq python.exe', '/FO', 'CSV'],
+            capture_output=True,
+            text=True
+        )
+
+        if 'python.exe' in result.stdout and 'src.cli.main' in result.stdout:
+            print("✅ Tracker is running")
+        else:
+            print("❌ Tracker is not running")
+            print("    Start with: python -m src.cli.main start")
+
     else:
-        print("❌ Tracker is not running")
-        print(" Start with: devtime start")
+        # Linux/macOS: use pgrep
+        result = subprocess.run(['pgrep', '-f', 'tracker'], capture_output=True)
+
+        if result.returncode == 0:
+            pids = result.stdout.decode().strip().split('\n')
+            print("✅ Tracker is running")
+            print(f"    PID: {', '.join(pids)}")
+        else:
+            print("❌ Tracker is not running")
+            print("    Start with: devtime start")
 
 
 if __name__ == "__main__":
