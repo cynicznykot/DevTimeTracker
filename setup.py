@@ -13,7 +13,7 @@ setup(
     description="Smart time tracker for developers",
     author="CynicznyKot",
     url="https://github.com/cynicznykot/DevTimeTracker",
-    packages=find_packages(),
+    packages=find_packages(include=["src", "src.*"]),
     entry_points={
         "console_scripts": [
             "devtime=src.cli.main:main",
