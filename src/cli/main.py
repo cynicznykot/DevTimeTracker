@@ -2,9 +2,9 @@ import sys
 import argparse
 import subprocess
 import platform
-import subprocess
 from src.core.tracker import TimeTracker
 from src.storage.json_storage import JsonStorage
+from src.daemon.autostart import enable, disable, is_enabled
 
 def main():
     parser = argparse.ArgumentParser(
@@ -13,6 +13,14 @@ def main():
     )
 
     subparsers = parser.add_subparsers(dest="command", help="Commands")
+
+    # Autostart
+    autostart_parser = subparsers.add_parser("autostart", help="Manage autostart")
+    autostart_subparsers = autostart_parser.add_subparsers(dest="autostart_action")
+
+    autostart_subparsers.add_parser("enable", help="Enable autostart")
+    autostart_subparsers.add_parser("disable", help="Disable autostart")
+    autostart_subparsers.add_parser("status", help="Check autostart status")
 
     # Start
     start_parser = subparsers.add_parser("start", help="Start Tracking")
@@ -48,8 +56,31 @@ def main():
     elif args.command == "status":
         _show_status()
 
+    elif args.command == "autostart":
+        if args.autostart_action == "enable":
+            if enable():
+                print("✅ Autostart enabled")
+            else:
+                print("❌ Failed to enable autostart")
+
+        elif args.autostart_action == "disable":
+            if disable():
+                print("✅ Autostart disabled")
+            else:
+                print("⚠️ Autostart was not enabled")
+
+        elif args.autostart_action == "status":
+            if is_enabled():
+                print("✅ Autostart is enabled")
+            else:
+                print("❌ Autostart is disabled")
+
+        else:
+            autostart_parser.print_help()
+
     else:
         parser.print_help()
+
 
 def _show_stats(storage: JsonStorage, days: int):
     all_data = storage.load_all()
