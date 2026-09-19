@@ -10,6 +10,7 @@ import os
 import sys
 import platform
 import shutil
+import pythoncom
 from pathlib import Path
 from typing import Optional
 
@@ -114,8 +115,44 @@ def _find_devtime_executable() -> Optional[str]:
 
 
 def _enable_windows() -> bool:
-    """Enable autostart on Windows using Startup folder."""
-    pass
+    """Enable autostart on Windows using Startup folder shortcut.
+
+    Creates .lnk file in Startup folder.
+    """
+    try:
+        from win32com.client import Dispatch
+    except ImportError:
+        print("⚠️ Cannot find 'devtime' executable")
+        return False
+
+    shortcut_path = get_autostart_path()
+    shortcut_path.parent.mkdir(parents=True, exist_ok=True)
+
+    shell = Dispatch("WScript.Shell")
+    shortcut = shell.CreateShortCut(str(shortcut_path))
+    shortcut.Targetpath = devtime_path
+    shortcut.Arguments = "start"
+    shortcut.WorkingDirectory = str(Path(devtime_path).parent)
+    shortcut.IconLocation = devtime_path
+    shortcut.Description = "DevTimeTracker - Smart time tracker"
+    shortcut.save()
+
+    print(f"✅ Autostart enabled: {shortcut_path}")
+    return True
+
+
+def _find_devtime_executable_windows() -> Optional[str]:
+    """Find devtime.exe on Windows."""
+    path = shutil.which("devtime")
+    if path:
+        return path
+
+    venv_path = Path(sys.executable).parent / "Scripts" / "devtime.exe"
+    if venv_path.exists():
+        return str(venv_path)
+
+    return None
+
 
 
 def _enable_macos() -> bool:
