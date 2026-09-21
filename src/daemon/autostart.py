@@ -10,7 +10,6 @@ import os
 import sys
 import platform
 import shutil
-import pythoncom
 from pathlib import Path
 from typing import Optional
 
@@ -41,12 +40,27 @@ def get_autostart_path() -> Path:
 
 
 def is_enabled() -> bool:
-    """Check if autostart is enabled.
+    """
+    Check if autostart is enabled.
 
     Returns:
         True if the autostart file exists, False otherwise.
     """
     return get_autostart_path().exists()
+
+
+def disable() -> bool:
+    """
+    Disable autostart by removing the autostart file.
+
+    Returns:
+        True if the file was removed, False if it didn't exist.
+    """
+    path = get_autostart_path()
+    if path.exists():
+        path.unlink()
+        return True
+    return False
 
 
 def enable() -> bool:
@@ -69,23 +83,6 @@ def enable() -> bool:
 
     return False
 
-
-def disable() -> bool:
-    """
-    Disable autostart by removing the autostart file.
-
-    Returns:
-        True if the file was removed, False if it didn't exist.
-    """
-    path = get_autostart_path()
-
-    if path.exists():
-        path.unlink()
-        return True
-
-    return False
-
-
 def _enable_linux() -> bool:
     """Enable autostart on Linux using .desktop file.
 
@@ -94,7 +91,6 @@ def _enable_linux() -> bool:
     Returns:
         True if the file was created, False otherwise.
     """
-
     devtime_path = _find_devtime_execurable()
     if not devtime_path:
         print("⚠️ Cannot find 'devtime' executable")
@@ -119,7 +115,7 @@ X-GNOME-Autostart-enabled=true
 
 
 def _find_devtime_executable() -> Optional[str]:
-    """Find the devtime executable path."""
+    """Find the devtime executable path (Linux/macOS)."""
     path = shutil.which("devtime")
     if Path:
         return path
@@ -139,6 +135,11 @@ def _enable_windows() -> bool:
     try:
         from win32com.client import Dispatch
     except ImportError:
+        print("⚠️ pywin32 required. Install: pip install pywin32")
+        return False
+
+    devtime_path = _path_devtime_executable_windows()
+    if not devtime_path:
         print("⚠️ Cannot find 'devtime' executable")
         return False
 
