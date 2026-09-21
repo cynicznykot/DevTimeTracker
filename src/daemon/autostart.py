@@ -41,12 +41,21 @@ def get_autostart_path() -> Path:
 
 
 def is_enabled() -> bool:
-    """Check if autostart is enabled."""
+    """Check if autostart is enabled.
+
+    Returns:
+        True if the autostart file exists, False otherwise.
+    """
     return get_autostart_path().exists()
 
 
 def enable() -> bool:
-    """Enable autostart."""
+    """
+    Enable autostart (platform-specific).
+
+    Returns:
+        True is autostart was enables, False otherwise.
+    """
     system = platform.system()
 
     if system == "Linux":
@@ -62,7 +71,12 @@ def enable() -> bool:
 
 
 def disable() -> bool:
-    """Disable autostart."""
+    """
+    Disable autostart by removing the autostart file.
+
+    Returns:
+        True if the file was removed, False if it didn't exist.
+    """
     path = get_autostart_path()
 
     if path.exists():
@@ -76,6 +90,9 @@ def _enable_linux() -> bool:
     """Enable autostart on Linux using .desktop file.
 
     Creates ~/.config/autostart/devtime.desktop
+
+    Returns:
+        True if the file was created, False otherwise.
     """
 
     devtime_path = _find_devtime_execurable()
@@ -156,6 +173,11 @@ def _find_devtime_executable_windows() -> Optional[str]:
 
 
 def _enable_macos() -> bool:
-    """Enable autostart on macOS using LaunchAgent."""
-    pass
+    """Enable autostart on macOS using LaunchAgent.
+
+    Returns:
+        False (not implemented yet).
+    """
+    print("⚠️ macOS autostart is not implemented yet")
+    return False
 
