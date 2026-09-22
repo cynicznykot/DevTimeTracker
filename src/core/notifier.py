@@ -59,4 +59,3 @@ def _notify_macos(title: str, message: str) -> bool:
     except (subprocess.CalledProcessError, FileNotFoundError):
         return False
 
-    
