@@ -103,7 +103,7 @@ def _show_stats(storage: JsonStorage, days: int):
 
     days_count = len(daily_stats)
     avg_seconds = total_seconds // days_count if days_count > 0 else 0
-    avg_hours = total_seconds // 3600
+    avg_hours = avg_seconds // 3600
     avg_minutes = (avg_seconds % 3600) // 60
 
     print("\n📊 STATISTICS FOR ALL TIME")
@@ -129,7 +129,7 @@ def _show_stats(storage: JsonStorage, days: int):
         h = total_day // 3600
         m = (total_day % 3600) // 60
         print(f"{date}: {h}h {m}m")
-        
+
 
 def _show_status():
     system = platform.system()
