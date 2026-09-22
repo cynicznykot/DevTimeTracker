@@ -2,9 +2,12 @@ import sys
 import argparse
 import subprocess
 import platform
+from datetime import datetime
+
 from src.core.tracker import TimeTracker
 from src.storage.json_storage import JsonStorage
 from src.daemon.autostart import enable, disable, is_enabled
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -81,6 +84,39 @@ def main():
     else:
         parser.print_help()
 
+def _calculate_streak(daily_stats: dict) -> int:
+    """
+    Calculate the current streak of consecutive days.
+
+    Args:
+        daily_stats: Dictionary of daily statistics.
+
+    Returns:
+        Number of consecutive days with activity.
+    """
+    if not daily_stats:
+        return 0
+
+    sorted_dates = sorted(daily_stats.keys(), reverse=True)
+
+    streak = 1
+    today = datetime.now().date()
+    first_date = datetime.strptime(sorted_dates[0], "%Y-%m-%d").date()
+
+    if (today - first_date).days > 1:
+        return 0
+
+    for i in range(1, len(sorted_dates)):
+        current = datetime.strptime(sorted_dates[i - 1], "%Y-%m-%d").date()
+        prev = datetime.strptime(sorted_dates[i], "%Y-%m-%d").date()
+
+        if (current - prev).days == 1:
+            streak += 1
+        else:
+            break
+
+    return streak
+
 
 def _show_stats(storage: JsonStorage, days: int):
     all_data = storage.load_all()
@@ -111,6 +147,10 @@ def _show_stats(storage: JsonStorage, days: int):
     print(f"Total time:       {total_hours}h {total_minutes}m")
     print(f"Days tracked:     {days_count}")
     print(f"Average/day:      {avg_hours}h {avg_minutes}m")
+
+    streak = _calculate_streak(daily_stats)
+    if streak > 0:
+        print(f"🔥 Streak: {streak} days in a row!")
 
     print("\n🖥️ BY EDITOR:")
     for editor, seconds in sorted(total_editor_stats.items(),
