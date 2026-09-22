@@ -97,14 +97,22 @@ def _show_stats(storage: JsonStorage, days: int):
                 total_editor_stats[editor] = 0
             total_editor_stats[editor] += seconds
 
+    total_seconds = sum(total_editor_stats.values())
+    total_hours = total_seconds // 3600
+    total_minutes = (total_seconds % 3600) // 60
+
+    days_count = len(daily_stats)
+    avg_seconds = total_seconds // days_count if days_count > 0 else 0
+    avg_hours = total_seconds // 3600
+    avg_minutes = (avg_seconds % 3600) // 60
+
     print("\n📊 STATISTICS FOR ALL TIME")
     print("=" * 40)
-    total = sum(total_editor_stats.values())
-    hours = total // 3600
-    minutes = (total % 3600) // 60
+    print(f"Total time:       {total_hours}h {total_minutes}m")
+    print(f"Days tracked:     {days_count}")
+    print(f"Average/day:      {avg_hours}h {avg_minutes}m")
 
-    print(f"Total time: {hours}h {minutes}m")
-    print("\nBy editor:")
+    print("\n🖥️ BY EDITOR:")
     for editor, seconds in sorted(total_editor_stats.items(),
                                   key=lambda x: x[1], reverse=True):
         h = seconds // 3600
@@ -121,11 +129,7 @@ def _show_stats(storage: JsonStorage, days: int):
         h = total_day // 3600
         m = (total_day % 3600) // 60
         print(f"{date}: {h}h {m}m")
-        for editor, seconds in editors.items():
-            sh = seconds // 3600
-            sm = (seconds % 3600) // 60
-            print(f" {editor}: {sh}h {sm}m")
-
+        
 
 def _show_status():
     system = platform.system()
