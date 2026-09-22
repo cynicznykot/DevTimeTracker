@@ -22,6 +22,7 @@ from typing import Optional
 from src.core.window_manager import get_all_windows
 from src.core.detectors import detect_editor
 from src.storage.json_storage import JsonStorage
+from src.core.notifier import send_notification
 
 
 class TimeTracker:
@@ -59,7 +60,6 @@ class TimeTracker:
         self.current_editor: Optional[str] = None
         self.session_start: Optional[datetime] = None
         self.storage = storage or JsonStorage()
-
 
     def _show_all_stats(self) -> None:
         """
@@ -110,6 +110,53 @@ class TimeTracker:
             return None
         except Exception:
             return None
+
+    def _start_session(self, editor: str) -> None:
+        """
+        Start a new work session.
+
+        Args:
+            editor: Name of the editor.
+        """
+        self.current_editor = editor
+        self.session_start = datetime.now()
+
+        # Send notification
+        send_notification(
+            "DevTimeTracker",
+            f"Work in {editor} started"
+        )
+
+        print(f"▶️ Work in {editor} started")
+
+
+    def _end_session(self) -> None:
+        """End the current work session and save it."""
+        if self.current_editor is None or self.session_start is None:
+            return
+
+        duration = int((datetime.now() - self.session_start).total_seconds())
+
+        if duration >= 5:
+            today = datetime.now().strftime('%Y-%m-%d')
+            self.storage.add_time(today, self.current_editor, duration)
+
+            hours = duration // 3600
+            minutes = (duration % 3600) // 60
+
+            # Send notification
+            send_notification(
+                "DevTimeTracker",
+                f"Work in {self.current_editor} finished ({hours}h {minutes}m)"
+            )
+
+            print(f"⏹️ Work in {self.current_editor} finished")
+            print(f"Duration: {hours}h {minutes}m")
+        else:
+            print(f"⏭️ Session too short ({duration}s), skipped")
+
+        self.current_editor = None
+        self.session_start = None
 
     def _tick(self) -> None:
         """
