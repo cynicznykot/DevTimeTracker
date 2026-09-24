@@ -26,7 +26,7 @@ class TestDetectEditor:
 
     def test_visual_studio(self):
         """Should detect Intellij IDEA."""
-        assert detect_editor("Main.java - Intellij IDEA") == "Intellij IDEA"
+        assert detect_editor("Main.java - IntelliJ IDEA") == "IntelliJ IDEA"
 
     def test_empty_title(self):
         """Should return None for empty title."""
@@ -91,4 +91,3 @@ class TestDetectLanguage:
         assert detect_language("main.py - PyCharm") == "Python"
         assert detect_language("app.js - VS Code") == "JavaScript"
 
-        
