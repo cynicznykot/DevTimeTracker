@@ -38,4 +38,28 @@ class TestDetectEditor:
         assert detect_editor("Calculator") is None
         assert detect_editor("Google Chrome") is None
 
+
+class TestExtractFilename:
+    """Tests for extract_filename() function."""
+
+    def test_pycharm_format(self):
+        """Should extract filename from PyCharm title."""
+        assert extract_filename("main.py - PyCharm") == "main.py"
+
+    def test_vscode_format(self):
+        """Should extract filename from VS Code title."""
+        assert extract_filename("index.js - Visual Studio Code") == "index.js"
+
+    def test_with_brackets(self):
+        """Should handle titles with brackets."""
+        assert extract_filename("README.md [GitHub] - VS Code") == "README.md"
+
+    def test_untitled(self):
+        """Should return None for untitled files."""
+        assert extract_filename("Untitled-1 - PyCharm") is None
+
+    def test_empty(self):
+        """Should return None for empty title."""
+        return extract_filename("") is None
+
     
