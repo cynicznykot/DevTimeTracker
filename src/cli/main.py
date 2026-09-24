@@ -172,11 +172,22 @@ def _show_stats(storage: JsonStorage, days: int):
         print(f"🔥 Streak: {streak} days in a row!")
 
     print("\n🖥️ BY EDITOR:")
+    max_editor_seconds = max(total_editor_stats.values()) if total_editor_stats else 0
+
+    max_name_len = max(len(name) for name in total_editor_stats.keys()) if total_editor_stats else 0
+
     for editor, seconds in sorted(total_editor_stats.items(),
                                   key=lambda x: x[1], reverse=True):
         h = seconds // 3600
         m = (seconds % 3600) // 60
-        print(f" {editor}: {h}h {m}m")
+
+        percent = (seconds / total_seconds * 100) if total_seconds > 0 else 0
+
+        bar = _make_bar(seconds, max_editor_seconds, width=15)
+
+        name_padded = editor.ljust(max_name_len)
+
+        print(f"  {name_padded}: {bar} {h}h {m}m ({percent:.0f}%)")
 
     print(f"\n📅 LAST {days} DAYS")
     print("=" * 40)
