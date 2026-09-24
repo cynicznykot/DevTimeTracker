@@ -118,6 +118,25 @@ def _calculate_streak(daily_stats: dict) -> int:
     return streak
 
 
+def _make_bar(seconds: int, max_seconds: int, width: int = 20) -> str:
+    """
+    Create a text bar for visualization.
+
+    Args:
+        seconds: Time in seconds.
+        max_seconds: Maximum time for scaling.
+        width: Width of the bar in characters.
+
+    Returns:
+        String with bar characters.
+    """
+    if max_seconds == 0:
+        return ""
+
+    filled = int(seconds / max_seconds * width)
+    return "█" * filled
+
+
 def _show_stats(storage: JsonStorage, days: int):
     all_data = storage.load_all()
     daily_stats = all_data.get('daily_stats', {})
