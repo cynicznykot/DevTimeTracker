@@ -194,7 +194,6 @@ def _show_stats(storage: JsonStorage, days: int):
         total_day = sum(editors.values())
         h = total_day // 3600
         m = (total_day % 3600) // 60
-        print(f"{date}: {h}h {m}m")
 
         bar = _make_bar(total_day, max_day_seconds)
         print(f"{date}: {bar} {h}h {m}m")
