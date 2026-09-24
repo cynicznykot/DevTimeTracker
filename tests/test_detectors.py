@@ -62,4 +62,33 @@ class TestExtractFilename:
         """Should return None for empty title."""
         return extract_filename("") is None
 
-    
+
+class TestDetectLanguage:
+    """Tests for language detection."""
+
+    def test_python(self):
+        """Should detect Python."""
+        assert detect_language_from_filename("main.py") == "Python"
+
+    def test_javascript(self):
+        """Should detect JavaScript."""
+        assert detect_language_from_filename("app.js") == "JavaScript"
+
+    def test_typescript(self):
+        """Should detect TypeScript."""
+        assert detect_language_from_filename("app.ts") == "TypeScript"
+
+    def test_dockerfile(self):
+        """Should detect Dockerfile."""
+        assert detect_language_from_filename("Dockerfile") == "Dockerfile"
+
+    def test_unknown_extension(self):
+        """Should return None for unknown extension."""
+        assert detect_language_from_filename("file.xyz") is None
+
+    def test_full_title(self):
+        """Should detect language from full window title."""
+        assert detect_language("main.py - PyCharm") == "Python"
+        assert detect_language("app.js - VS Code") == "JavaScript"
+
+        
