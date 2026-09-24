@@ -182,12 +182,22 @@ def _show_stats(storage: JsonStorage, days: int):
     print("=" * 40)
 
     sorted_dates = sorted(daily_stats.keys(), reverse=True)[:days]
+
+    max_day_seconds = 0
+    for date in sorted_dates:
+        total_day = sum(daily_stats[date].values())
+        if total_day > max_day_seconds:
+            max_day_seconds = total_day
+
     for date in sorted_dates:
         editors = daily_stats[date]
         total_day = sum(editors.values())
         h = total_day // 3600
         m = (total_day % 3600) // 60
         print(f"{date}: {h}h {m}m")
+
+        bar = _make_bar(total_day, max_day_seconds)
+        print(f"{date}: {bar} {h}h {m}m")
 
 
 def _show_status():
