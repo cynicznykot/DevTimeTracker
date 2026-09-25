@@ -36,4 +36,35 @@ class TestJsonStorageInit:
         data = storage.load_all()
         assert data == {"daily_stats": {}}
 
+
+class TestAddTime:
+    """Tests for add_time() method."""
+
+    def test_add_single_entry(self, temp_storage):
+        """Should add time for one editor."""
+        temp_storage.add_time("2026-09-24", "PyCharm", 3600)
+        stats = temp_storage.get_daily_stats("2026-09-24")
+        assert stats == {"PyCharm": 3600}
+
+    def test_add_multiple_entries(self, temp_storage):
+        """Should accumulate time for same editor."""
+        temp_storage.add_time("2026-09-24", "PyCharm", 3600)
+        temp_storage.add_time("2026-09-24", "PyCharm", 1800)
+        stats = temp_storage.get_daily_stats("2026-09-24")
+        assert stats == {"PyCharm": 5400}
+
+    def test_add_different_editors(self, temp_storage):
+        """Should track multiple editors."""
+        temp_storage.add_time("2026-09-24", "PyCharm", 3600)
+        temp_storage.add_time("2026-09-24", "VS Code", 1800)
+        stats = temp_storage.get_daily_stats("2026-09-24")
+        assert stats == {"PyCharm": 3600, "VS Code": 1800}
+
+    def test_add_different_days(self, temp_storage):
+        """Should track different days separately."""
+        temp_storage.add_time("2026-09-24", "PyCharm", 3600)
+        temp_storage.add_time("2026-09-23", "PyCharm", 1800)
+        assert temp_storage.get_daily_stats("2026-09-24") == {"PyCharm": 3600}
+        assert temp_storage.get_daily_stats("2026-09-23") == {"PyCharm": 1800}
+
         
