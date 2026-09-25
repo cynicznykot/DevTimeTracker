@@ -79,5 +79,28 @@ class TestGetDailyStats:
         """Should return stats for existing day."""
         assert temp_storage.get_daily_stats("2026-09-24") == {"PyCharm": 3600}
 
+
+class TestGetAllStats:
+    """Tests for get_all_stats() method."""
+
+    def test_empty(self, temp_storage):
+        """Should return empty dict when no data."""
+        assert temp_storage.get_daily_stats() == {}
+
+    def test_single_editor(self, temp_storage):
+        """Should sum time across all days."""
+        temp_storage.add_time("2026-09-24", "PyCharm", 3600)
+        temp_storage.add_time("2026-09-23", "PyCharm", 1800)
+        stats = temp_storage.get_all_stats()
+        assert stats == {"PyCharm": 5400}
+
+    def test_multiple_editors(self, temp_storage):
+        """Should sum time per editor."""
+        temp_storage.add_time("2026-09-24", "PyCharm", 3600)
+        temp_storage.add_time("2026-09-24", "VS Code", 1800)
+        temp_storage.add_time("2026-09-23", "PyCharm", 1200)
+        stats = temp_storage.get_all_stats()
+        assert stats == {"PyCharm": 4800, "VS Code": 1800}
+
         
 
