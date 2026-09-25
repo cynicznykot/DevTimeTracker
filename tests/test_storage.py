@@ -67,4 +67,17 @@ class TestAddTime:
         assert temp_storage.get_daily_stats("2026-09-24") == {"PyCharm": 3600}
         assert temp_storage.get_daily_stats("2026-09-23") == {"PyCharm": 1800}
 
+
+class TestGetDailyStats:
+    """Tests for get_daily_stats() method."""
+
+    def test_empty_day(self, temp_storage):
+        """Should return empty dict for missing day."""
+        assert temp_storage.get_daily_stats("2026-01-01") == {}
+
+    def test_existing_day(self, temp_storage):
+        """Should return stats for existing day."""
+        assert temp_storage.get_daily_stats("2026-09-24") == {"PyCharm": 3600}
+
         
+
