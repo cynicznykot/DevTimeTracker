@@ -102,5 +102,14 @@ class TestGetAllStats:
         stats = temp_storage.get_all_stats()
         assert stats == {"PyCharm": 4800, "VS Code": 1800}
 
-        
+
+class TestClear:
+    """Tests for clear() method."""
+
+    def test_clear(self, temp_storage):
+        """Should remove all data."""
+        temp_storage.add_time("2026-09-24", "PyCharm", 3600)
+        temp_storage.clear()
+        assert temp_storage.get_all_stats() == {}
+        assert temp_storage.get_total_time() == 0
 
