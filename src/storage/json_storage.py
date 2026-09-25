@@ -174,6 +174,19 @@ class JsonStorage:
 
         return total_stats
 
+    def get_total_time(self) -> int:
+        """
+        Get total time across all days.
+
+        Returns:
+            Total time in seconds.
+        """
+        data = self.load_all()
+        total = 0
+        for day in data.get('daily_stats', {}).values():
+            total += sum(day.values())
+        return total
+    
     def clear(self) -> None:
         """
         Clear all statistics data.
