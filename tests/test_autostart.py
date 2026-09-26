@@ -44,3 +44,24 @@ class TestGetAutostartPath:
         with pytest.raises(OSError):
             autostart.get_autostart_path()
 
+
+class TestIsEnabled:
+    """Tests for is_enabled()."""
+
+    @patch("src.daemon.autostart.get_autostart_path")
+    def test_enables(self, mock_path):
+        """Should return True if file exists."""
+        mock_file = MagicMock()
+        mock_file.exists.return_value = True
+        mock_path.return_value = mock_file
+        assert autostart.is_enabled() is True
+
+    @patch("src.daemon.autostart.get_autostart_path")
+    def test_disabled(self, mock_path):
+        """Should return False if file doesn't exist."""
+        mock_file = MagicMock()
+        mock_file.exists.return_value = False
+        mock_path.return_value = mock_file
+        assert autostart.is_enabled() is False
+
+        
