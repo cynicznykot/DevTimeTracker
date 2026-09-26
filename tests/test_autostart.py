@@ -64,4 +64,31 @@ class TestIsEnabled:
         mock_path.return_value = mock_file
         assert autostart.is_enabled() is False
 
+
+class TestDisable:
+    """Tests for disable()."""
+
+    @patch("src.daemon.autostart.get_autostart_path")
+    def test_disable_existing(self, mock_path):
+        """Should remove file and return True."""
+        mock_file = MagicMock()
+        mock_file.exists.return_value = True
+        mock_path.return_value = mock_file
+
+        result = autostart.disable()
+
+        assert result is True
+        mock_file.unlink.assert_called_once()
+
+    @patch("src.daemon.autostart.get_autostart_path")
+    def test_disable_missing(self, mock_path):
+        """Should return False if file doesn't exist."""
+        mock_file = MagicMock()
+        mock_file.exists.return_value = False
+        mock_path.return_value = mock_file
+
+        result = autostart.disable()
+
+        assert result is False
+        mock_file.unlink.assert_not_called()
         
