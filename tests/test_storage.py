@@ -77,6 +77,7 @@ class TestGetDailyStats:
 
     def test_existing_day(self, temp_storage):
         """Should return stats for existing day."""
+        temp_storage.add_time("2026-09-24", "PyCharm", 3600)
         assert temp_storage.get_daily_stats("2026-09-24") == {"PyCharm": 3600}
 
 
@@ -85,7 +86,7 @@ class TestGetAllStats:
 
     def test_empty(self, temp_storage):
         """Should return empty dict when no data."""
-        assert temp_storage.get_daily_stats() == {}
+        assert temp_storage.get_all_stats() == {}
 
     def test_single_editor(self, temp_storage):
         """Should sum time across all days."""
