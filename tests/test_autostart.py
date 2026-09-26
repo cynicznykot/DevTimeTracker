@@ -125,4 +125,41 @@ class TestEnableLinux:
 
         assert result is False
 
+
+class TestEnableRouting:
+    """Tests for enable() platform routing."""
+
+    @patch("src.daemon.autostart.platform.system")
+    @patch("src.daemon.autostart._enable_linux")
+    def test_routes_to_linux(self, mock_linux, mock_system):
+        """Should call _enable_linux on Linux."""
+        mock_system.return_value = 'Linux'
+        mock_system.return_value = True
+
+        autostart.enable()
+
+        mock_linux.assert_called_once()
+
+    @patch("src.daemon.autostart.platform.system")
+    @patch("src.daemon.autostart._enable_linux")
+    def test_routes_to_linux(self, mock_linux, mock_system):
+        """Should call _enable_linux on Linux."""
+        mock_system.return_value = 'Linux'
+        mock_system.return_value = True
+
+        autostart.enable()
+
+        mock_linux.assert_called_once()
+
+    @patch("src.daemon.autostart.platform.system")
+    @patch("src.daemon.autostart._enable_macos")
+    def test_routes_to_macos(self, mock_mac, mock_system):
+        """Should call _enable_macos on macOS."""
+        mock_system.return_value = 'Darwin'
+        mock_mac.return_value = True
+
+        autostart.enable()
+
+        mock_mac.assert_called_once()
+
         
