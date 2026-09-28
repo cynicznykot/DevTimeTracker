@@ -37,7 +37,7 @@ class TestGetAutostartPath:
         path = autostart.get_autostart_path()
         assert "com.devtime.tracker.plist" in str(path)
 
-    @patch("scr.daemon.autostart.platform.system")
+    @patch("src.daemon.autostart.platform.system")
     def test_unsupported_os(self, mock_system):
         """Should raise OSError on unsupported OS."""
         mock_system.return_value = 'FreeBDS'
@@ -109,7 +109,7 @@ class TestEnableLinux:
         result = autostart._enable_linux()
 
         assert result is True
-        mock_file.write_test.assert_called_once()
+        mock_file.write_text.assert_called_once()
 
         call_args = mock_file.write_text.call_args[0][0]
         assert "[Desktop Entry]" in call_args
@@ -134,7 +134,6 @@ class TestEnableRouting:
     def test_routes_to_linux(self, mock_linux, mock_system):
         """Should call _enable_linux on Linux."""
         mock_system.return_value = 'Linux'
-        mock_system.return_value = True
 
         autostart.enable()
 
@@ -145,7 +144,6 @@ class TestEnableRouting:
     def test_routes_to_linux(self, mock_linux, mock_system):
         """Should call _enable_linux on Linux."""
         mock_system.return_value = 'Linux'
-        mock_system.return_value = True
 
         autostart.enable()
 

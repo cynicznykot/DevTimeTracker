@@ -91,7 +91,7 @@ def _enable_linux() -> bool:
     Returns:
         True if the file was created, False otherwise.
     """
-    devtime_path = _find_devtime_execurable()
+    devtime_path = _find_devtime_executable()
     if not devtime_path:
         print("⚠️ Cannot find 'devtime' executable")
         return False
@@ -99,11 +99,11 @@ def _enable_linux() -> bool:
     autostart_file = get_autostart_path()
     autostart_file.parent.mkdir(parents=True, exist_ok=True)
 
-    desktop_content = f"""[Desctop Entry]
+    desktop_content = f"""[Desktop Entry]
 Type=Application
 Name=DevTimeTracker
 Comment=Smart time tracker for developers
-Exec=utilities-system-monitor
+Exec={devtime_path} start
 Terminal=false
 Categories=Utility;
 X-GNOME-Autostart-enabled=true
