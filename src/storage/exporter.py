@@ -54,10 +54,10 @@ class DataExporter:
                 writer.writerow(['Date', 'Editor', 'Seconds', 'Hours', 'Minutes'])
 
                 for date, editors in sorted(daily_stats.items()):
-                    for editor, seconds in editor.items():
+                    for editor_name, seconds in editors.items():
                         hours = seconds // 3600
                         minutes = (seconds % 3600) // 60
-                        writer.writerow([data, editor, seconds, hours, minutes])
+                        writer.writerow([data, editor_name, seconds, hours, minutes])
 
             print(f"✅ Exported to {file_path}")
             return True
