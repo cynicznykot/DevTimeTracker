@@ -40,5 +40,36 @@ class TestTrackerInit:
         tracker = TimeTracker(storage=mock_storage)
         assert tracker.storage is mock_storage
 
+
+class TestGetActiveEditor:
+    """Tests for _get_active_editor."""
+
+    @patch("src.core.tracker.get_all_windows")
+    @patch("src.core.tracker.detect_editor")
+    def test_returns_editor(self, mock_detect, mock_windows, tracker):
+        """Should return editor name when found."""
+        mock_window = MagicMock()
+        mock_window.title = "main.py - PyCharm"
+        mock_window.return_value = [mock_window]
+        mock_detect.return_value = "PyCharm"
+
+        assert tracker._get_active_editor() == "PyCharm"
+
+    @patch("src.core.tracker.get_all_windows")
+    def test_returns_none_when_no_windows(self, mock_windows, tracker):
+        """Should return None when no windows."""
+        mock_windows.return_value = []
+
+        assert tracker._get_active_editor() is None
+
+    @patch("src.core.tracker.get_all_windows")
+    def test_handles_exception(self, mock_windows, tracker):
+        """Should return None on exception."""
+        mock_windows.side_effect = Exception("Test error")
+
+        assert tracker._get_active_editor() is None
+
+        
+
         
 
