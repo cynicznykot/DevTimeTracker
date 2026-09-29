@@ -129,7 +129,6 @@ class TimeTracker:
 
         print(f"▶️ Work in {editor} started")
 
-
     def _end_session(self) -> None:
         """End the current work session and save it."""
         if self.current_editor is None or self.session_start is None:
@@ -243,6 +242,8 @@ class TimeTracker:
                 self.storage.add_time(today, self.current_editor, duration)
                 print(f"⏹️ Work in {self.current_editor} finished")
 
-        print("\n👋 Tracker stopped")
+        self.current_editor = None
+        self.session_start = None
 
+        print("\n👋 Tracker stopped")
         self._show_all_stats()

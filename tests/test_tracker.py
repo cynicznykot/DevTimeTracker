@@ -50,7 +50,7 @@ class TestGetActiveEditor:
         """Should return editor name when found."""
         mock_window = MagicMock()
         mock_window.title = "main.py - PyCharm"
-        mock_window.return_value = [mock_window]
+        mock_windows.return_value = [mock_window]
         mock_detect.return_value = "PyCharm"
 
         assert tracker._get_active_editor() == "PyCharm"
@@ -204,7 +204,7 @@ class TestStop:
 
         mock_storage.add_time.assert_not_called()
 
-        
+
 
 
 
