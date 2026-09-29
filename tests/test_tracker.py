@@ -182,5 +182,29 @@ class TestTick:
         # Session should not restart
         assert tracker.session_start == original_start
 
+
+class TestStop:
+    """Tests for stop()."""
+
+    @patch("src.core.tracker.send_notification")
+    def test_ends_session_on_stop(self, mock_notify, tracker, mock_storage):
+        """Should end active session on stop."""
+        tracker.current_editor = "PyCharm"
+        tracker.session_start = datetime.now() - timedelta(seconds=10)
+
+        tracker.stop()
+
+        assert tracker.current_editor is None
+        mock_storage.add_time.assert_called_once()
+
+    @patch("src.core.tracker.send_notification")
+    def test_stop_without_session(self, mock_notify, tracker, mock_storage):
+        """Should not crash if no active session."""
+        tracker.stop()
+
+        mock_storage.add_time.assert_not_called()
+
         
+
+
 
