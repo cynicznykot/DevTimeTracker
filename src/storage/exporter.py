@@ -66,4 +66,29 @@ class DataExporter:
             print(f"❌ Export error: {e}")
             return False
 
-        
+    def export_json(self, file_path: str = "stats_export.json") -> bool:
+        """
+        Export statistics to JSON file.
+
+        Args:
+            file_path: Output file path.
+
+        Returns:
+            True if export was successful, False otherwise.
+        """
+        try:
+            data = self.storage.load_all()
+
+            if not data.get('daily_stats'):
+                print("📊 No data to export.")
+                return False
+
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+
+            print(f"✅ Exported to {file_path}")
+            return True
+
+        except Exception as e:
+            print(f"❌ Export error: {e}")
+            return False
