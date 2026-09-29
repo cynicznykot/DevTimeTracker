@@ -122,6 +122,23 @@ class TestEndSession:
         assert args[1] == "PyCharm"
         assert args[2] >= 10
 
+    @patch("src.core.tracker.send_notification")
+    def test_skips_short_session(self, mock_notify, tracker, mock_storage):
+        """Should skip sessions shorter than 5 seconds."""
+        tracker.current_editor = "PyCharm"
+        tracker.session_start = datetime.now()  # 0 seconds
+
+        tracker._end_session()
+
+        mock_storage.add_time.assert_not_called()
+
+    @patch("src.core.tracker.send_notification")
+    def test_does_nothing_without_session(self, mock_notify, tracker):
+        """Should do nothing if no active session."""
+        tracker._end_session()  # Should not raise
+
+        assert tracker.current_editor is None
+
         
 
 
