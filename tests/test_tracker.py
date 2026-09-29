@@ -139,7 +139,32 @@ class TestEndSession:
 
         assert tracker.current_editor is None
 
-        
 
+class TestTick:
+    """Tests for _tick()."""
+
+    @patch("src.core.tracker.send_notification")
+    @patch.object(TimeTracker, "_get_active_editor")
+    def test_starts_session_when_editor_found(self, mock_get, mock_notify, tracker):
+        """Should start session when editor detected."""
+        mock_get.return_value = "PyCharm"
+
+        tracker._tick()
+
+        assert tracker.current_editor == "PyCharm"
+
+    @patch("src.core.tracker.send_notification")
+    @patch.object(TimeTracker, "_get_active_editor")
+    def test_ends_session_when_editor_closed(self, mock_get, mock_notify, tracker):
+        """Should end session when editor no longer detected."""
+        # Start with active session
+        tracker.current_editor = "PyCharm"
+        tracker.session_start = datetime.now() - timedelta(seconds=10)
+
+        mock_get.return_value = None
+
+        tracker._tick()
+
+        assert tracker.current_editor is None
 
 
