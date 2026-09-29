@@ -92,5 +92,37 @@ class TestStartSession:
         assert "PyCharm" in args[1]
 
 
+class TestEndSession:
+    """Tests for _end_session()."""
+
+    @patch("src.core.tracker.send_notification")
+    def test_ends_session(self, mock_notify, tracker):
+        """Should save session and clear state."""
+        # Start a session
+        tracker.current_editor = "PyCharm"
+        tracker.session_start = datetime.now() - timedelta(seconds=10)
+
+        # End it
+        tracker._end_session()
+
+        assert tracker.current_editor is None
+        assert tracker.session_start is None
+
+    @patch("src.core.tracker.send_notification")
+    def test_saves_to_storage(self, mock_notify, tracker, mock_storage):
+        """Should save time to storage."""
+        tracker.current_editor = "PyCharm"
+        tracker.session_start = datetime.now() - timedelta(seconds=10)
+
+        tracker._end_session()
+
+        mock_storage.add_time.assert_called_once()
+        args = mock_storage.add_time.call_args[0]
+        # args: (date, editor, seconds)
+        assert args[1] == "PyCharm"
+        assert args[2] >= 10
+
+        
+
 
 
