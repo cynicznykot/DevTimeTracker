@@ -69,7 +69,28 @@ class TestGetActiveEditor:
 
         assert tracker._get_active_editor() is None
 
-        
 
-        
+class TestStartSession:
+    """Tests for _start_session()."""
+
+    @patch("src.core.tracker.send_notification")
+    def test_starts_sessions(self, mock_notify, tracker):
+        """Should set current_editor and session_start."""
+        tracker._start_session("PyCharm")
+
+        assert tracker.current_editor == "PyCharm"
+        assert tracker.session_start is not None
+
+    @patch("src.core.tracker.send_notification")
+    def test_sends_notification(self, mock_notify, tracker):
+        """Should send a notification."""
+        tracker._start_session("PyCharm")
+
+        mock_notify.assert_called_once()
+        args = mock_notify.call_args[0]
+        assert "DevTimeTracker" in args[0]
+        assert "PyCharm" in args[1]
+
+
+
 
