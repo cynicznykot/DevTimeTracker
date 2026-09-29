@@ -167,4 +167,20 @@ class TestTick:
 
         assert tracker.current_editor is None
 
+    @patch("src.core.tracker.send_notification")
+    @patch.object(TimeTracker, "_get_active_editor")
+    def test_continues_existing_session(self, mock_get, mock_notify, tracker):
+        """Should not restart session if already active"""
+        tracker.current_editor = "PyCharm"
+        tracker.session_start = datetime.now() - timedelta(seconds=10)
+        original_start = tracker.session_start
+
+        mock_get.return_value = "PyCharm"
+
+        tracker._tick()
+
+        # Session should not restart
+        assert tracker.session_start == original_start
+
+        
 
