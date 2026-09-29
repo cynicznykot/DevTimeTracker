@@ -60,7 +60,7 @@ class TestExtractFilename:
 
     def test_empty(self):
         """Should return None for empty title."""
-        return extract_filename("") is None
+        assert extract_filename("") is None
 
 
 class TestDetectLanguage:
