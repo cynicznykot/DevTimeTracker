@@ -83,6 +83,7 @@ def enable() -> bool:
 
     return False
 
+
 def _enable_linux() -> bool:
     """Enable autostart on Linux using .desktop file.
 
@@ -117,7 +118,7 @@ X-GNOME-Autostart-enabled=true
 def _find_devtime_executable() -> Optional[str]:
     """Find the devtime executable path (Linux/macOS)."""
     path = shutil.which("devtime")
-    if Path:
+    if path:
         return path
 
     venv_path = Path(sys.executable).parent / "devtime"
@@ -138,7 +139,7 @@ def _enable_windows() -> bool:
         print("⚠️ pywin32 required. Install: pip install pywin32")
         return False
 
-    devtime_path = _path_devtime_executable_windows()
+    devtime_path = _find_devtime_executable_windows()
     if not devtime_path:
         print("⚠️ Cannot find 'devtime' executable")
         return False
