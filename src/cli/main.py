@@ -41,6 +41,12 @@ def main():
     # Status
     status_parser = subparsers.add_parser("status", help="Show tracker status")
 
+    # Export
+    export_parser = subparsers.add_parser("export", help="Export statistics")
+    export_parser.add_argument("--format", choices=["csv", "json", ], default="csv",
+                               help="Export format (default: csv)")
+    export_parser.add_argument("-o", "--output", type=str, default=None, help="Output file path")
+
     args = parser.parse_args()
 
     if args.command == "start":
@@ -66,6 +72,19 @@ def main():
             else:
                 print("❌ Failed to enable autostart")
 
+    elif args.command == "export":
+        from src.storage.exporter import DataExporter
+
+        storage = JsonStorage()
+        exporter = DataExporter(storage)
+
+        if args.format == "csv":
+            output = args.output or "stats_export.csv"
+            exporter.export_csv(output)
+        elif args.format == "json":
+            output = args.output or "stats_export.json"
+            exporter.export_json(output)
+
         elif args.autostart_action == "disable":
             if disable():
                 print("✅ Autostart disabled")
@@ -83,6 +102,7 @@ def main():
 
     else:
         parser.print_help()
+
 
 def _calculate_streak(daily_stats: dict) -> int:
     """
