@@ -1,9 +1,15 @@
+#!/usr/bin/env python3
+"""
+Install dependencies automatically based on OS.
+"""
+
 import sys
 import subprocess
 import platform
 
 
 def install_package(package):
+    """Install a Python package using pip."""
     subprocess.run([sys.executable, '-m', 'pip', 'install', package], check=True)
 
 
