@@ -195,9 +195,47 @@ def _find_devtime_executable_macos() -> Optional[str]:
 def _enable_macos() -> bool:
     """Enable autostart on macOS using LaunchAgent.
 
+    Creates ~/Library/LaunchAgents/com.devtime.tracker.plist
+
     Returns:
-        False (not implemented yet).
+        True if the file was created, False otherwise.
     """
-    print("⚠️ macOS autostart is not implemented yet")
-    return False
+    devtime_path = _find_devtime_executable_macos()
+    if not devtime_path:
+        print("⚠️ Cannot find 'devtime' executable")
+        return False
+
+    plist_file = get_autostart_path()
+    plist_file.parent.mkdir(parents=True, exist_ok=True)
+
+    plist_content = f"""<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/P
+ropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.devtime.tracker</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{devtime_path}</string>
+        <string>start</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <false/>
+    <key>StandardOutPath</key>
+    <string>/tmp/devtime.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/devtime.error.log</string>
+</dict>
+</plist>
+"""
+
+    plist_file.write_text(plist_content, encoding="utf-8")
+    print(f"✅ Autostart enabled: {plist_file}")
+    return True
+
+
+
 
