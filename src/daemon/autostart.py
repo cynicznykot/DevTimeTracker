@@ -7,6 +7,7 @@ Supports:
 """
 
 import os
+import subprocess
 import sys
 import platform
 import shutil
@@ -52,15 +53,24 @@ def is_enabled() -> bool:
 def disable() -> bool:
     """
     Disable autostart by removing the autostart file.
-
-    Returns:
-        True if the file was removed, False if it didn't exist.
     """
     path = get_autostart_path()
     if path.exists():
-        path.unlink()
-        return True
-    return False
+        return False
+
+    # On macOS, unload the LaunchAgent first
+    if platform.system() == 'Darwin':
+        try:
+            subprocess.run(
+                ['launchcrl', 'unload', str(path)],
+                check=False,
+                capture_output=True
+            )
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            pass
+
+    path.unlink()
+    return True
 
 
 def enable() -> bool:
