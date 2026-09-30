@@ -173,6 +173,24 @@ def _find_devtime_executable_windows() -> Optional[str]:
     return None
 
 
+def _find_devtime_executable_macos() -> Optional[str]:
+    """Find the devtime executable path on macOS."""
+    path = shutil.which("devtime")
+    if path:
+        return path
+
+    # Check common venv locations
+    venv_path = Path(sys.executable).parent / "devtime"
+    if venv_path.exists():
+        return str(venv_path)
+
+    # Check /usr/local/bin
+    usr_local = Path("/usr/local/bin/devtime")
+    if usr_local.exists():
+        return str(usr_local)
+
+    return None
+
 
 def _enable_macos() -> bool:
     """Enable autostart on macOS using LaunchAgent.
