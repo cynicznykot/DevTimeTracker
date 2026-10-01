@@ -68,9 +68,11 @@ class TestIsEnabled:
 class TestDisable:
     """Tests for disable()."""
 
+    @patch("src.daemon.autostart.platform.system")
     @patch("src.daemon.autostart.get_autostart_path")
-    def test_disable_existing(self, mock_path):
+    def test_disable_existing(self, mock_path, mock_system):
         """Should remove file and return True."""
+        mock_system.return_value = 'Linux'
         mock_file = MagicMock()
         mock_file.exists.return_value = True
         mock_path.return_value = mock_file
@@ -80,8 +82,9 @@ class TestDisable:
         assert result is True
         mock_file.unlink.assert_called_once()
 
+    @patch("src.daemon.autostart.platform.system")
     @patch("src.daemon.autostart.get_autostart_path")
-    def test_disable_missing(self, mock_path):
+    def test_disable_missing(self, mock_path, mock_system):
         """Should return False if file doesn't exist."""
         mock_system.return_value = 'Linux'
         mock_file = MagicMock()
@@ -115,7 +118,7 @@ class TestEnableLinux:
         call_args = mock_file.write_text.call_args[0][0]
         assert "[Desktop Entry]" in call_args
         assert "DevTimeTracker" in call_args
-        assert "/usr/bin/devtime start" in call_args
+        assert "/usr/local/bin/devtime start" in call_args
 
     @patch("src.daemon.autostart._find_devtime_executable")
     def test_enable_no_executable(self, mock_find):
@@ -169,7 +172,7 @@ class TestEnableMacOS:
     @patch("src.daemon.autostart.get_autostart_path")
     def test_enable_success(self, mock_path, mock_find):
         """Should create plist file."""
-        mock_path.return_value = "/usr/local/bin/devtime"
+        mock_find.return_value = "/usr/local/bin/devtime"
 
         mock_file = MagicMock()
         mock_file.parent = MagicMock()
