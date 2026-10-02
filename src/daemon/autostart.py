@@ -55,14 +55,14 @@ def disable() -> bool:
     Disable autostart by removing the autostart file.
     """
     path = get_autostart_path()
-    if path.exists():
+    if not path.exists():
         return False
 
     # On macOS, unload the LaunchAgent first
     if platform.system() == 'Darwin':
         try:
             subprocess.run(
-                ['launchcrl', 'unload', str(path)],
+                ['launchctl', 'unload', str(path)],
                 check=False,
                 capture_output=True
             )
