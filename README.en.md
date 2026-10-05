@@ -1,3 +1,5 @@
+[![Tests](https://github.com/cynicznykot/DevTimeTracker/actions/workflows/tests.yml/badge.svg)](https://github.com/cynicznykot/DevTimeTracker/actions/workflows/tests.yml)
+
 # ⏱️ DevTimeTracker 
 
 Smart time tracker for developers
