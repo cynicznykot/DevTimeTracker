@@ -34,3 +34,7 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
+
+# Export files
+stats_export.csv
+stats_export.json
