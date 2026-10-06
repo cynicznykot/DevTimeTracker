@@ -56,3 +56,29 @@ class TrayIcon:
         self.tracker = tracker
         self.icon: Optional[pystray.Icon] = None
         self.tracker_thread: Optional[threading.Thread] = None
+
+    def _start_tracker(self, icon, item):
+        """Start the tracker in a separate thread."""
+        if self.tracker_thread and self.tracker_thread.is_alive():
+            print("⚠️ Tracker is already running")
+            return
+
+        self.tracker_thread = threading.Thread(
+            target=self.tracker.start,
+            daemon=True
+        )
+        self.tracker_thread.start()
+        print("▶️ Tracker started")
+
+        if self.icon:
+            self.icon.icon = create_icon('green')
+
+    def _stop_tracker(self, icon, item):
+        """Stop the tracker."""
+        self.tracker.stop()
+        print("⏹️ Tracker stopped")
+
+        if self.icon:
+            self.icon.icon = create_icon('red')
+
+    
