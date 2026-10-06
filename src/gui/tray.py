@@ -36,3 +36,23 @@ def create_icon(color: str = 'green') -> Image.Image:
     draw.line([32, 32, 44, 32], fill='white', width=3)
 
     return image
+
+
+class TrayIcon:
+    """
+    System tray icon for DevTimeTracker.
+
+    Shows an icon in the system tray with a menu for controlling
+    the tracker and viewing statistics.
+    """
+
+    def __init__(self, tracker: TimeTracker):
+        """
+        Initialize tray icon.
+
+        Args:
+            tracker: TimeTracker instance.
+        """
+        self.tracker = tracker
+        self.icon: Optional[pystray.Icon] = None
+        self.tracker_thread: Optional[threading.Thread] = None
