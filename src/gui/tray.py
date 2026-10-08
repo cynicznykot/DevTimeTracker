@@ -81,4 +81,37 @@ class TrayIcon:
         if self.icon:
             self.icon.icon = create_icon('red')
 
-    
+    def _show_stats(self, icon, item):
+        """Show statistics window."""
+        from src.gui.window import
+        show_stats_window(self.tracker.storage)
+
+    def _quit(self, icon, item):
+        """Quit the aplication."""
+        if self.tracker.is_running:
+            self.tracker.stop()
+        icon.stop()
+
+    def run(self):
+        """Run the tray icon."""
+        menu = pystray.Menu(
+            item('▶️ Start Tracking', self._start_tracker),
+            item('⏹️ Stop Tracking', self._stop_tracker),
+            pystray.Menu.SEPARATOR,
+            item('📊 Show Statistics', self._show_stats),
+            pystray.Menu.SEPARATOR,
+            item('❌ Quit', self._quit),
+        )
+
+        self.icon = pystray.Icon(
+            "DevTimeTracker",
+            create_icon('red'),
+            "DevTimeTracker",
+            menu
+        )
+
+        print("🚀 Tray icon started")
+        self.icon.run()
+
+        
+        )
