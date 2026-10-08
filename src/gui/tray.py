@@ -113,5 +113,5 @@ class TrayIcon:
         print("🚀 Tray icon started")
         self.icon.run()
 
-        
+
         )
