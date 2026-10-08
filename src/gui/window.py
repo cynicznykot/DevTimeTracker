@@ -63,4 +63,4 @@ def show_stats_window(storage: JsonStorage):
     close_btn.pack(pady=10)
 
     root.mainloop()
-    
+

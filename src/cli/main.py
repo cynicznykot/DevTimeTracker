@@ -17,6 +17,9 @@ def main():
 
     subparsers = parser.add_subparsers(dest="command", help="Commands")
 
+    # Tray
+    tray_parser = subparsers.add_parser('tray', help="Run system tray icon")
+
     # Autostart
     autostart_parser = subparsers.add_parser("autostart", help="Manage autostart")
     autostart_subparsers = autostart_parser.add_subparsers(dest="autostart_action")
@@ -64,6 +67,13 @@ def main():
 
     elif args.command == "status":
         _show_status()
+
+    elif args.command == "tray":
+        from src.gui.tray import TrayIcon
+
+        tracker = TimeTracker()
+        tray = TrayIcon(tracker)
+        tray.run()
 
     elif args.command == "autostart":
         if args.autostart_action == "enable":
