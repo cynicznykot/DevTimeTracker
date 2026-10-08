@@ -83,7 +83,7 @@ class TrayIcon:
 
     def _show_stats(self, icon, item):
         """Show statistics window."""
-        from src.gui.window import
+        from src.gui.window import show_stats_window
         show_stats_window(self.tracker.storage)
 
     def _quit(self, icon, item):
@@ -114,4 +114,3 @@ class TrayIcon:
         self.icon.run()
 
 
-        )
