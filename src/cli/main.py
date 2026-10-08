@@ -82,19 +82,6 @@ def main():
             else:
                 print("❌ Failed to enable autostart")
 
-    elif args.command == "export":
-        from src.storage.exporter import DataExporter
-
-        storage = JsonStorage()
-        exporter = DataExporter(storage)
-
-        if args.format == "csv":
-            output = args.output or "stats_export.csv"
-            exporter.export_csv(output)
-        elif args.format == "json":
-            output = args.output or "stats_export.json"
-            exporter.export_json(output)
-
         elif args.autostart_action == "disable":
             if disable():
                 print("✅ Autostart disabled")
@@ -109,6 +96,19 @@ def main():
 
         else:
             autostart_parser.print_help()
+
+    elif args.command == "export":
+        from src.storage.exporter import DataExporter
+
+        storage = JsonStorage()
+        exporter = DataExporter(storage)
+
+        if args.format == "csv":
+            output = args.output or "stats_export.csv"
+            exporter.export_csv(output)
+        elif args.format == "json":
+            output = args.output or "stats_export.json"
+            exporter.export_json(output)
 
     else:
         parser.print_help()
