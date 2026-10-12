@@ -81,7 +81,7 @@ class JsonStorage:
                 total_stats[language] += seconds
 
         return total_stats
-    
+
     def _ensure_file_exists(self) -> None:
         """
         Create the JSON file with default structure if it doesn't exist.

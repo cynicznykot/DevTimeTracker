@@ -138,7 +138,11 @@ class TimeTracker:
 
         if duration >= 5:
             today = datetime.now().strftime('%Y-%m-%d')
+
             self.storage.add_time(today, self.current_editor, duration)
+
+            if hasattr(self, 'current_language') and self.current_language:
+                self.storage.add_language_time(today, self.current_language, duration)
 
             hours = duration // 3600
             minutes = (duration % 3600) // 60
