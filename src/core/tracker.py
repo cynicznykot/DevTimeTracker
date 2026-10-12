@@ -17,10 +17,10 @@ Example:
 
 import time
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Tuple
 
 from src.core.window_manager import get_all_windows
-from src.core.detectors import detect_editor
+from src.core.detectors import detect_editor, detect_language
 from src.storage.json_storage import JsonStorage
 from src.core.notifier import send_notification
 
@@ -58,6 +58,7 @@ class TimeTracker:
         self.check_interval = check_interval
         self.is_running = False
         self.current_editor: Optional[str] = None
+        self.current_language: Optional[str] = None
         self.session_start: Optional[datetime] = None
         self.storage = storage or JsonStorage()
 
@@ -87,7 +88,7 @@ class TimeTracker:
             m = (seconds % 3600) // 60
             print(f"{editor}: {h}h {m}m")
 
-    def _get_active_editor(self) -> Optional[str]:
+    def _get_active_editor(self) -> Optional[Tuple[str, Optional[str]]]:
         """
         Detect the currently active code editor.
 
@@ -106,12 +107,13 @@ class TimeTracker:
                     continue
                 editor = detect_editor(title)
                 if editor:
-                    return editor
+                    language = detect_language(title)
+                    return (editor, language)
             return None
         except Exception:
             return None
 
-    def _start_session(self, editor: str) -> None:
+    def _start_session(self, editor: str, language: Optional[str] = None) -> None:
         """
         Start a new work session.
 
@@ -119,6 +121,7 @@ class TimeTracker:
             editor: Name of the editor.
         """
         self.current_editor = editor
+        self.current_language = language
         self.session_start = datetime.now()
 
         # Send notification
@@ -141,7 +144,7 @@ class TimeTracker:
 
             self.storage.add_time(today, self.current_editor, duration)
 
-            if hasattr(self, 'current_language') and self.current_language:
+            if self.current_language:
                 self.storage.add_language_time(today, self.current_language, duration)
 
             hours = duration // 3600
@@ -159,6 +162,7 @@ class TimeTracker:
             print(f"⏭️ Session too short ({duration}s), skipped")
 
         self.current_editor = None
+        self.current_language = None
         self.session_start = None
 
     def _tick(self) -> None:
@@ -170,35 +174,15 @@ class TimeTracker:
         - If an editor is found and a session exists, continue tracking.
         - If no editor is found and a session exists, end the session.
         """
-        editor = self._get_active_editor()
+        result = self._get_active_editor()
 
-        if editor:
-            # Editor is open
+        if result:
+            editor, language = result
             if self.current_editor is None:
-                # Start a new session
-                self.current_editor = editor
-                self.session_start = datetime.now()
-                print(f"▶️ Work in {editor} start")
+                self._start_session(editor, language)
         else:
-            # Editor is closed
-            if self.current_editor is not None and self.session_start is not None:
-
-                # End the current session
-                duration = int((datetime.now() - self.session_start).total_seconds())
-
-                if duration >= 5:  # Minimum session duration (seconds)
-                    today = datetime.now().strftime('%Y-%m-%d')
-                    self.storage.add_time(today, self.current_editor, duration)
-
-                    hours = duration // 3600
-                    minutes = (duration % 3600) // 60
-                    print(f"⏹️ Work in {self.current_editor} finished")
-                    print(f"Duration: {hours}h {minutes}m")
-                else:
-                    print(f"⏭️ Session too short ({duration}s), skipped")
-
-                self.current_editor = None
-                self.session_start = None
+            if self.current_editor is not None:
+                self._end_session()
 
     def start(self) -> None:
         """
@@ -238,16 +222,8 @@ class TimeTracker:
         """
         self.is_running = False
 
-        # Complete the current session if it exists
-        if self.current_editor is not None and self.session_start is not None:
-            duration = int((datetime.now() - self.session_start).total_seconds())
-            if duration >= 5:
-                today = datetime.now().strftime('%Y-%m-%d')
-                self.storage.add_time(today, self.current_editor, duration)
-                print(f"⏹️ Work in {self.current_editor} finished")
-
-        self.current_editor = None
-        self.session_start = None
+        if self.current_editor is not None:
+            self._end_session()
 
         print("\n👋 Tracker stopped")
         self._show_all_stats()
