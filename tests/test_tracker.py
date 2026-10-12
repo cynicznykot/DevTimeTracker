@@ -45,15 +45,18 @@ class TestGetActiveEditor:
     """Tests for _get_active_editor."""
 
     @patch("src.core.tracker.get_all_windows")
+    @patch("src.core.tracker.detect_language")
     @patch("src.core.tracker.detect_editor")
-    def test_returns_editor(self, mock_detect, mock_windows, tracker):
-        """Should return editor name when found."""
+    def test_returns_editor(self, mock_detect, mock_lang, mock_windows, tracker):
+        """Should return (editor, language) when found."""
         mock_window = MagicMock()
         mock_window.title = "main.py - PyCharm"
         mock_windows.return_value = [mock_window]
         mock_detect.return_value = "PyCharm"
+        mock_lang.return_value = "Python"
 
-        assert tracker._get_active_editor() == "PyCharm"
+        result = tracker._get_active_editor()
+        assert result == ("PyCharm", "Python")
 
     @patch("src.core.tracker.get_all_windows")
     def test_returns_none_when_no_windows(self, mock_windows, tracker):
@@ -147,7 +150,7 @@ class TestTick:
     @patch.object(TimeTracker, "_get_active_editor")
     def test_starts_session_when_editor_found(self, mock_get, mock_notify, tracker):
         """Should start session when editor detected."""
-        mock_get.return_value = "PyCharm"
+        mock_get.return_value = ("PyCharm", "Python")
 
         tracker._tick()
 
@@ -169,13 +172,23 @@ class TestTick:
 
     @patch("src.core.tracker.send_notification")
     @patch.object(TimeTracker, "_get_active_editor")
+    def test_no_action_when_idle(self, mock_get, mock_notify, tracker):
+        """Should do nothing when no editor and no session."""
+        mock_get.return_value = None
+
+        tracker._tick()
+
+        assert tracker.current_editor is None
+        
+    @patch("src.core.tracker.send_notification")
+    @patch.object(TimeTracker, "_get_active_editor")
     def test_continues_existing_session(self, mock_get, mock_notify, tracker):
         """Should not restart session if already active"""
         tracker.current_editor = "PyCharm"
         tracker.session_start = datetime.now() - timedelta(seconds=10)
         original_start = tracker.session_start
 
-        mock_get.return_value = "PyCharm"
+        mock_get.return_value = ("PyCharm", "Python")
 
         tracker._tick()
 
