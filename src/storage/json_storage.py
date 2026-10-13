@@ -239,6 +239,24 @@ class JsonStorage:
         data['language_stats'][date][language] += seconds
         self._save_data(data)
 
+    def get_language_stats(self) -> Dict[str, int]:
+        """
+        Get total time per language across all days.
+
+        Returns:
+            Dictionary mapping language name to total seconds.
+        """
+        data = self.load_all()
+        total_stats = {}
+
+        for day in data.get('language_stats', {}).values():
+            for language, seconds in day.items():
+                if language not in total_stats:
+                    total_stats[language] = 0
+                total_stats[language] += seconds
+
+        return total_stats
+
     def clear(self) -> None:
         """
         Clear all statistics data.
