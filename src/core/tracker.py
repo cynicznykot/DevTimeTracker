@@ -88,6 +88,14 @@ class TimeTracker:
             m = (seconds % 3600) // 60
             print(f"{editor}: {h}h {m}m")
 
+        language_stats = self.storage.get_language_stats()
+        if language_stats:
+            print("\nBy language:")
+            for language, seconds in sorted(language_stats.items(), key=lambda x: x[1], reverse=True):
+                h = seconds // 3600
+                m = (seconds % 3600) // 60
+                print(f"{language}: {h}h {m}m")
+
     def _get_active_editor(self) -> Optional[Tuple[str, Optional[str]]]:
         """
         Detect the currently active code editor.

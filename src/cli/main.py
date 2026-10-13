@@ -236,7 +236,7 @@ def _show_stats(storage: JsonStorage, days: int):
             name_padded = language.ljust(max_lang_name_len)
             print(f"{name_padded}: {bar} {h}h {m}m ({percent:.0f}%")
 
-            
+
 
     sorted_dates = sorted(daily_stats.keys(), reverse=True)[:days]
 
