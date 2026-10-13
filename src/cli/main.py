@@ -222,6 +222,22 @@ def _show_stats(storage: JsonStorage, days: int):
     print(f"\n📅 LAST {days} DAYS")
     print("=" * 40)
 
+    language_stats = storage.get_language_stats()
+    if language_stats:
+        print("\n📝 BY LANGUAGE:")
+        max_lang_seconds = max(language_stats.values())
+        max_lang_name_len = max(len(name) for name in language_stats.keys())
+
+        for language, seconds in sorted(language_stats.items(), key=lambda x: x[1], reverse=True):
+            h = seconds // 3600
+            m = (seconds % 3600) // 60
+            percent = (seconds / total_seconds * 100) if total_seconds > 0 else 0
+            bar = _make_bar(seconds, max_lang_seconds, width=15)
+            name_padded = language.ljust(max_lang_name_len)
+            print(f"{name_padded}: {bar} {h}h {m}m ({percent:.0f}%")
+
+            
+
     sorted_dates = sorted(daily_stats.keys(), reverse=True)[:days]
 
     max_day_seconds = 0
