@@ -96,7 +96,7 @@ class TimeTracker:
                 m = (seconds % 3600) // 60
                 print(f"{language}: {h}h {m}m")
 
-    def _get_active_editor(self) -> Optional[Tuple[str, Optional[str]]]:
+    def _get_active_editor(self):
         """
         Detect the currently active code editor.
 
@@ -115,7 +115,7 @@ class TimeTracker:
                     continue
                 editor = detect_editor(title)
                 if editor:
-                    language = detect_language(title)
+                    language = detect_language(title) or "Unknown"
                     return (editor, language)
             return None
         except Exception:
@@ -147,7 +147,7 @@ class TimeTracker:
 
         duration = int((datetime.now() - self.session_start).total_seconds())
 
-        if duration >= 5:
+        if duration >= 1:
             today = datetime.now().strftime('%Y-%m-%d')
 
             self.storage.add_time(today, self.current_editor, duration)

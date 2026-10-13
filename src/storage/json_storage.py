@@ -53,34 +53,6 @@ class JsonStorage:
         self.file_path = file_path
         self._ensure_file_exists()
 
-    def add_language_time(self, date: str, language: str, seconds: int) -> None:
-        """Add time for a specific language."""
-        data = self.load_all()
-
-        if 'language_stats' not in data:
-            data['language_stats'][date] = {}
-
-        if language not in data['language_stats']:
-            data['language_stats'][date] = {}
-
-        if language not in data['language_stats'][date]:
-            data['language_stats'][date][language] = 0
-
-        data['language_stats'][date][language] += seconds
-        self._save_data(data)
-
-    def get_language_stats(self) -> Dict[str, int]:
-        """Get total time per language across all days."""
-        data = self.load_all()
-        total_stats = {}
-
-        for day in data.get('language_stats', {}).values():
-            for language, seconds in day.items():
-                if language not in total_stats:
-                    total_stats[language] = 0
-                total_stats[language] += seconds
-
-        return total_stats
 
     def _ensure_file_exists(self) -> None:
         """
