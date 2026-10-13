@@ -215,7 +215,30 @@ class JsonStorage:
         for day in data.get('daily_stats', {}).values():
             total += sum(day.values())
         return total
-    
+
+    def add_language_time(self, date: str, language: str, seconds: int) -> None:
+        """
+        Add time for a specific language.
+
+        Args:
+            date: Date in 'YYYY-MM-DD' format.
+            language: Programming language name.
+            seconds: Time in seconds.
+        """
+        data = self.load_all()
+
+        if 'language_stats' not in data:
+            data['language_stats'] = {}
+
+        if date not in data['language_stats']:
+            data['language_stats'][date] = {}
+
+        if language not in data['language_stats'][date]:
+            data['language_stats'][date][language] = 0
+
+        data['language_stats'][date][language] += seconds
+        self._save_data(data)
+
     def clear(self) -> None:
         """
         Clear all statistics data.
