@@ -1,3 +1,25 @@
+"""
+DevTimeTracker CLI entry point.
+
+This module provides the command-line interface for DevTimeTracker.
+It handles argument parsing and dispatches commands to the appropriate
+modules.
+
+Commands:
+    start       Start tracking time
+    stop        Stop tracking (instructions)
+    status      Show tracker status
+    stats       Show statistics
+    export      Export statistics to CSV/JSON
+    autostart   Manage autostart
+    tray        Run system tray icon
+
+Example:
+    $ devtime start
+    $ devtime stats -d 30
+    $ devtime export --format csv
+"""
+
 import sys
 import argparse
 import subprocess
