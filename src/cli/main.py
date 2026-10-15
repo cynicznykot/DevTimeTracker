@@ -269,7 +269,86 @@ def _print_daily_stats(daily_stats: dict, days: int) -> None:
         bar = _make_bar(total_day, max_day_seconds)
         print(f"{date}: {bar} {h}h {m}m")
 
-        
+
+# =======================================================================================
+# COMMAND HANDLERS
+# =======================================================================================
+
+def _show_stats(storage: JsonStorage, days: int) -> None:
+    """
+    Show statistics for all time and last N days.
+
+    Args:
+        storage: JsonStorage instance.
+        days: Number of days to show.
+    """
+    all_data = storage.load_all()
+    daily_stats = all_data.get('daily_stats', {})
+
+    if not daily_stats:
+        print("📊 No data yet. Tracker hasn't been used.")
+        return
+
+    # Aggregate editor stats
+    total_editor_stats = {}
+    for date, editors in daily_stats.items():
+        for editor, seconds in editors.items():
+            total_editor_stats[editor] = total_editor_stats.get(editor, 0) + seconds
+
+    total_seconds = sum(total_editor_stats.values())
+    days_count = len(daily_stats)
+    avg_seconds = total_seconds // days_count if days_count > 0 else 0
+
+    # === Header ===
+    print("\n📊 STATISTICS FOR ALL TIME")
+    print("=" * 40)
+    print(f"Total time:       {_format_duration(total_seconds)}")
+    print(f"Days tracked:     {days_count}")
+    print(f"Average/day:      {_format_duration(avg_seconds)}")
+
+    # === Streak ===
+    streak = _calculate_streak(daily_stats)
+    if streak > 0:
+        print(f"🔥 Streak: {streak} days in a row!")
+
+    # === By editor ===
+    _print_editor_stats(total_editor_stats, total_seconds)
+
+    # === By language ===
+    language_stats = storage.get_language_stats()
+    _print_daily_stats(language_stats, total_seconds)
+
+    # === Last N days ===
+    _print_daily_stats(daily_stats, days)
+
+
+def _show_status():
+    system = platform.system()
+
+    if system == "Windows":
+        result = subprocess.run(
+            ['tasklist', '/FI', 'IMAGENAME eq python.exe', '/FO', 'CSV'],
+            capture_output=True,
+            text=True
+        )
+
+        if 'python.exe' in result.stdout and 'src.cli.main' in result.stdout:
+            print("✅ Tracker is running")
+        else:
+            print("❌ Tracker is not running")
+            print("    Start with: python -m src.cli.main start")
+
+    else:
+        # Linux/macOS: use pgrep
+        result = subprocess.run(['pgrep', '-f', 'tracker'], capture_output=True)
+
+        if result.returncode == 0:
+            pids = result.stdout.decode().strip().split('\n')
+            print("✅ Tracker is running")
+            print(f"    PID: {', '.join(pids)}")
+        else:
+            print("❌ Tracker is not running")
+            print("    Start with: devtime start")
 
 def main():
     parser = argparse.ArgumentParser(
@@ -375,123 +454,6 @@ def main():
     else:
         parser.print_help()
 
-
-def _show_stats(storage: JsonStorage, days: int):
-    all_data = storage.load_all()
-    daily_stats = all_data.get('daily_stats', {})
-
-    if not daily_stats:
-        print("📊 No data yet. Tracker hasn't been used.")
-        return
-
-    total_editor_stats = {}
-    for date, editors in daily_stats.items():
-        for editor, seconds in editors.items():
-            if editor not in total_editor_stats:
-                total_editor_stats[editor] = 0
-            total_editor_stats[editor] += seconds
-
-    total_seconds = sum(total_editor_stats.values())
-    total_hours = total_seconds // 3600
-    total_minutes = (total_seconds % 3600) // 60
-
-    days_count = len(daily_stats)
-    avg_seconds = total_seconds // days_count if days_count > 0 else 0
-    avg_hours = avg_seconds // 3600
-    avg_minutes = (avg_seconds % 3600) // 60
-
-    print("\n📊 STATISTICS FOR ALL TIME")
-    print("=" * 40)
-    print(f"Total time:       {total_hours}h {total_minutes}m")
-    print(f"Days tracked:     {days_count}")
-    print(f"Average/day:      {avg_hours}h {avg_minutes}m")
-
-    streak = _calculate_streak(daily_stats)
-    if streak > 0:
-        print(f"🔥 Streak: {streak} days in a row!")
-
-    print("\n🖥️ BY EDITOR:")
-    max_editor_seconds = max(total_editor_stats.values()) if total_editor_stats else 0
-
-    max_name_len = max(len(name) for name in total_editor_stats.keys()) if total_editor_stats else 0
-
-    for editor, seconds in sorted(total_editor_stats.items(),
-                                  key=lambda x: x[1], reverse=True):
-        h = seconds // 3600
-        m = (seconds % 3600) // 60
-
-        percent = (seconds / total_seconds * 100) if total_seconds > 0 else 0
-
-        bar = _make_bar(seconds, max_editor_seconds, width=15)
-
-        name_padded = editor.ljust(max_name_len)
-
-        print(f"  {name_padded}: {bar} {h}h {m}m ({percent:.0f}%)")
-
-    print(f"\n📅 LAST {days} DAYS")
-    print("=" * 40)
-
-    language_stats = storage.get_language_stats()
-    if language_stats:
-        print("\n📝 BY LANGUAGE:")
-        max_lang_seconds = max(language_stats.values())
-        max_lang_name_len = max(len(name) for name in language_stats.keys())
-
-        for language, seconds in sorted(language_stats.items(), key=lambda x: x[1], reverse=True):
-            h = seconds // 3600
-            m = (seconds % 3600) // 60
-            percent = (seconds / total_seconds * 100) if total_seconds > 0 else 0
-            bar = _make_bar(seconds, max_lang_seconds, width=15)
-            name_padded = language.ljust(max_lang_name_len)
-            print(f"{name_padded}: {bar} {h}h {m}m ({percent:.0f}%")
-
-
-
-    sorted_dates = sorted(daily_stats.keys(), reverse=True)[:days]
-
-    max_day_seconds = 0
-    for date in sorted_dates:
-        total_day = sum(daily_stats[date].values())
-        if total_day > max_day_seconds:
-            max_day_seconds = total_day
-
-    for date in sorted_dates:
-        editors = daily_stats[date]
-        total_day = sum(editors.values())
-        h = total_day // 3600
-        m = (total_day % 3600) // 60
-
-        bar = _make_bar(total_day, max_day_seconds)
-        print(f"{date}: {bar} {h}h {m}m")
-
-
-def _show_status():
-    system = platform.system()
-
-    if system == "Windows":
-        result = subprocess.run(
-            ['tasklist', '/FI', 'IMAGENAME eq python.exe', '/FO', 'CSV'],
-            capture_output=True,
-            text=True
-        )
-
-        if 'python.exe' in result.stdout and 'src.cli.main' in result.stdout:
-            print("✅ Tracker is running")
-        else:
-            print("❌ Tracker is not running")
-            print("    Start with: python -m src.cli.main start")
-
-    else:
-        # Linux/macOS: use pgrep
-        result = subprocess.run(['pgrep', '-f', 'tracker'], capture_output=True)
-
-        if result.returncode == 0:
-            pids = result.stdout.decode().strip().split('\n')
-            print("✅ Tracker is running")
-            print(f"    PID: {', '.join(pids)}")
-        else:
-            print("❌ Tracker is not running")
-            print("    Start with: devtime start")
 
 
 if __name__ == "__main__":
