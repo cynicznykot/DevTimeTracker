@@ -217,6 +217,30 @@ def _print_editor_stats(editor_stats: dict, total_seconds: int) -> None:
         print(f"  {name_padded}: {bar} {h}h {m}m ({percent:.0f}%)")
 
 
+def _print_language_stats(language_stats: dict, total_seconds: int) -> None:
+    """
+    Print statistics grouped by language.
+
+    Args:
+        language_stats: Dictionary mapping language name to seconds.
+        total_seconds: Total time in seconds (for percentage).
+    """
+    if not language_stats:
+        return
+
+    print(f"\n📝 BY LANGUAGE:")
+    max_seconds = max(language_stats.values())
+    max_name_len = max(len(name) for name in language_stats.keys())
+
+    for language, seconds in sorted(language_stats.items(), key=lambda x: x[1], reverse=True):
+        h = seconds // 3600
+        m = (seconds % 3600) // 60
+        percent = (seconds / total_seconds * 100) if total_seconds > 0 else 0
+        bar = _make_bar(seconds, max_seconds, width=15)
+        name_padded = language.ljust(max_name_len)
+        print(f"  {name_padded}: {bar} {h}h {m}m ({percent:.0f}%)")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="DevTimeTracker - smart time tracker for developers",
