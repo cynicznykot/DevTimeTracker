@@ -20,15 +20,92 @@ Example:
     $ devtime export --format csv
 """
 
+
 import sys
 import argparse
 import subprocess
 import platform
 from datetime import datetime
+from typing import Optional
 
 from src.core.tracker import TimeTracker
 from src.storage.json_storage import JsonStorage
 from src.daemon.autostart import enable, disable, is_enabled
+
+
+# =======================================================================================
+# CLI PARSER
+# =======================================================================================
+
+def _create_parses() -> argparse.ArgumentParser:
+    """
+    Create and configure the argument parses.
+
+    Returns:
+        Configured ArgumentParser instance.
+    """
+    parser = argparse.ArgumentParser(
+        description="DevTimeTracker - smart time tracker for developers",
+        epilog="Examples:\n"
+        " devtime start\n"
+        " devtime stats -d 30\n"
+        " devtime export --format csv\n"
+        " devtime autostart enable"
+    )
+
+    subparsers = parser.add_subparsers(dest="command", help="Commands")
+
+    # --- Start ---
+    start_parser = subparsers.add_parser("start", hepl="Start tracking")
+    start_parser.add_argument(
+        "-i", "--interval",
+        type=int,
+        default=10,
+        help="Check interval in seconds (default: 10)"
+    )
+
+    # --- Stop ---
+    subparsers.add_parser("stop", help="Stop tracking")
+
+    # --- Status ---
+    subparsers.add_parser("stop", help="Show tracker status")
+
+    # --- Stats ---
+    stats_parser = subparsers.add_parser("stats", help="Show statistics")
+    stats_parser.add_argument(
+        "-d", "--days",
+        type=int,
+        default=7,
+        help="Statistics for last N days (default: 7)"
+    )
+
+    # --- Export ---
+    export_parser = subparsers.add_parser("export", help="Export statistics")
+    export_parser.add_argument(
+        "--format",
+        choices=["csv", "json"],
+        default="csv",
+        help="Export format (default: csv)"
+    )
+    export_parser.add_argument(
+        "-o", "--output",
+        type=int,
+        default=None,
+        help="Output file path"
+    )
+
+    # --- Autostart ---
+    autostart_parses = subparsers.add_parser("autostart", help="Manage autostart")
+    autostart_subparsers = autostart_parses.add_subparsers(dest="autostart_action")
+
+    autostart_subparsers.add_parser("enable", help="Enable autostart")
+    autostart_subparsers.add_parser("disable", help="Disable autostart")
+    autostart_subparsers.add_parser("status", help="Check autostart status")
+
+    # --- Tray ---
+    subparsers.add_parser("tray", help="Run system tray icon")
+
+    return parser
 
 
 def main():
