@@ -193,6 +193,30 @@ def _calculate_streak(daily_stats: dict) -> int:
     return streak
 
 
+def _print_editor_stats(editor_stats: dict, total_seconds: int) -> None:
+    """
+    Print statistics grouped by editor.
+
+    Args:
+        editor_stats: Dictionary mapping editor name to seconds.
+        total_seconds: Total time in seconds (for percentages).
+    """
+    if not editor_stats:
+        return
+
+    print("\n🖥️ BY EDITOR:")
+    max_seconds = max(editor_stats.values())
+    max_name_len = max(len(name) for name in editor_stats.keys())
+
+    for editor, seconds in sorted(editor_stats.items(), key=lambda x: x[1], reverse=True):
+        h = seconds // 3600
+        m = (seconds % 3600) // 60
+        percent = (seconds / total_seconds * 100) if total_seconds > 0 else 0
+        bar = _make_bar(seconds, max_seconds, width=15)
+        name_padded = editor.ljust(max_name_len)
+        print(f"  {name_padded}: {bar} {h}h {m}m ({percent:.0f}%)")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="DevTimeTracker - smart time tracker for developers",
