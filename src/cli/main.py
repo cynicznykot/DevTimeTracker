@@ -108,6 +108,91 @@ def _create_parses() -> argparse.ArgumentParser:
     return parser
 
 
+# =======================================================================================
+# HELPER FUNCTIONS
+# =======================================================================================
+
+def _format_duration(seconds: int) -> str:
+    """
+    Format duration in seconds to a human-readable string.
+
+    Args:
+        seconds: Duration in seconds.
+
+    Returns:
+        Formatted string like "2h 30m" or "45s".
+
+    Examples:
+        >>> _format_duration(9000)
+        '2h 30m'
+        >>> _format_duration(45)
+        '45s'
+    """
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    secs = seconds % 60
+
+    if hours > 0:
+        return f"{hours}h {minutes}m"
+    elif minutes > 0:
+        return f"{minutes}m {secs}s"
+    else:
+        return f"{secs}s"
+
+
+def _make_bar(seconds: int, max_seconds: int, width: int = 20) -> str:
+    """
+    Create a text bar for visualization.
+
+    Args:
+        seconds: Time in seconds.
+        max_seconds: Maximum time for scaling.
+        width: Width of the bar in characters.
+
+    Returns:
+        String with bar characters.
+    """
+    if max_seconds == 0:
+        return ""
+
+    filled = int(seconds / max_seconds * width)
+    return "█" * filled
+
+
+def _calculate_streak(daily_stats: dict) -> int:
+    """
+    Calculate the current streak of consecutive days.
+
+    Args:
+        daily_stats: Dictionary of daily statistics.
+
+    Returns:
+        Number of consecutive days with activity.
+    """
+    if not daily_stats:
+        return 0
+
+    sorted_dates = sorted(daily_stats.keys(), reverse=True)
+
+    streak = 1
+    today = datetime.now().date()
+    first_date = datetime.strptime(sorted_dates[0], "%Y-%m-%d").date()
+
+    if (today - first_date).days > 1:
+        return 0
+
+    for i in range(1, len(sorted_dates)):
+        current = datetime.strptime(sorted_dates[i - 1], "%Y-%m-%d").date()
+        prev = datetime.strptime(sorted_dates[i], "%Y-%m-%d").date()
+
+        if (current - prev).days == 1:
+            streak += 1
+        else:
+            break
+
+    return streak
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="DevTimeTracker - smart time tracker for developers",
@@ -211,59 +296,6 @@ def main():
 
     else:
         parser.print_help()
-
-
-def _calculate_streak(daily_stats: dict) -> int:
-    """
-    Calculate the current streak of consecutive days.
-
-    Args:
-        daily_stats: Dictionary of daily statistics.
-
-    Returns:
-        Number of consecutive days with activity.
-    """
-    if not daily_stats:
-        return 0
-
-    sorted_dates = sorted(daily_stats.keys(), reverse=True)
-
-    streak = 1
-    today = datetime.now().date()
-    first_date = datetime.strptime(sorted_dates[0], "%Y-%m-%d").date()
-
-    if (today - first_date).days > 1:
-        return 0
-
-    for i in range(1, len(sorted_dates)):
-        current = datetime.strptime(sorted_dates[i - 1], "%Y-%m-%d").date()
-        prev = datetime.strptime(sorted_dates[i], "%Y-%m-%d").date()
-
-        if (current - prev).days == 1:
-            streak += 1
-        else:
-            break
-
-    return streak
-
-
-def _make_bar(seconds: int, max_seconds: int, width: int = 20) -> str:
-    """
-    Create a text bar for visualization.
-
-    Args:
-        seconds: Time in seconds.
-        max_seconds: Maximum time for scaling.
-        width: Width of the bar in characters.
-
-    Returns:
-        String with bar characters.
-    """
-    if max_seconds == 0:
-        return ""
-
-    filled = int(seconds / max_seconds * width)
-    return "█" * filled
 
 
 def _show_stats(storage: JsonStorage, days: int):
