@@ -322,7 +322,14 @@ def _show_stats(storage: JsonStorage, days: int) -> None:
     _print_daily_stats(daily_stats, days)
 
 
-def _show_status():
+def _show_status() -> None:
+    """
+    Show tracker status (running or not).
+
+    Uses platform-specific commands:
+    - Windows: tasklist
+    - Linux/macOS: pgrep
+    """
     system = platform.system()
 
     if system == "Windows":
