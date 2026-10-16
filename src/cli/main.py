@@ -37,7 +37,7 @@ from src.daemon.autostart import enable, disable, is_enabled
 # CLI PARSER
 # =======================================================================================
 
-def _create_parses() -> argparse.ArgumentParser:
+def _create_parser() -> argparse.ArgumentParser:
     """
     Create and configure the argument parses.
 
@@ -56,7 +56,7 @@ def _create_parses() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", help="Commands")
 
     # --- Start ---
-    start_parser = subparsers.add_parser("start", hepl="Start tracking")
+    start_parser = subparsers.add_parser("start", help="Start tracking")
     start_parser.add_argument(
         "-i", "--interval",
         type=int,
@@ -68,7 +68,7 @@ def _create_parses() -> argparse.ArgumentParser:
     subparsers.add_parser("stop", help="Stop tracking")
 
     # --- Status ---
-    subparsers.add_parser("stop", help="Show tracker status")
+    subparsers.add_parser("status", help="Show tracker status")
 
     # --- Stats ---
     stats_parser = subparsers.add_parser("stats", help="Show statistics")
@@ -89,7 +89,7 @@ def _create_parses() -> argparse.ArgumentParser:
     )
     export_parser.add_argument(
         "-o", "--output",
-        type=int,
+        type=str,
         default=None,
         help="Output file path"
     )
@@ -316,7 +316,7 @@ def _show_stats(storage: JsonStorage, days: int) -> None:
 
     # === By language ===
     language_stats = storage.get_language_stats()
-    _print_daily_stats(language_stats, total_seconds)
+    _print_language_stats(language_stats, total_seconds)
 
     # === Last N days ===
     _print_daily_stats(daily_stats, days)
@@ -413,7 +413,7 @@ def _handle_export(fmt: str, output: Optional[str]) -> None:
 
 def main():
     """Main entry point for the CLI."""
-    parser = _create_parses()
+    parser = _create_parser()
     args = parser.parse_args()
 
     if args.command == 'start':
