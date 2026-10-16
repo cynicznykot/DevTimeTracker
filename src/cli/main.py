@@ -410,111 +410,43 @@ def _handle_export(fmt: str, output: Optional[str]) -> None:
     elif fmt == 'json':
         exporter.export_json(output or "stats_export.json")
 
-        
+
 def main():
-    parser = argparse.ArgumentParser(
-        description="DevTimeTracker - smart time tracker for developers",
-        epilog="Examples:\n devtime start\n devtime stats\n devtime stop"
-    )
-
-    subparsers = parser.add_subparsers(dest="command", help="Commands")
-
-    # Tray
-    tray_parser = subparsers.add_parser('tray', help="Run system tray icon")
-
-    # Autostart
-    autostart_parser = subparsers.add_parser("autostart", help="Manage autostart")
-    autostart_subparsers = autostart_parser.add_subparsers(dest="autostart_action")
-
-    autostart_subparsers.add_parser("enable", help="Enable autostart")
-    autostart_subparsers.add_parser("disable", help="Disable autostart")
-    autostart_subparsers.add_parser("status", help="Check autostart status")
-
-    # Start
-    start_parser = subparsers.add_parser("start", help="Start Tracking")
-    start_parser.add_argument("-i", "--interval", type=int, default=10,
-                                help="Check interval in seconds (default: 10)")
-
-    # Stats
-    stats_parser = subparsers.add_parser("stats", help="Show statistics")
-    stats_parser.add_argument("-d", "--days", type=int, default=7,
-                                help="Statistic for last N day (default: 7)")
-
-    # Stop
-    stop_parser = subparsers.add_parser("stop", help="Stop Tracking")
-
-    # Status
-    status_parser = subparsers.add_parser("status", help="Show tracker status")
-
-    # Export
-    export_parser = subparsers.add_parser("export", help="Export statistics")
-    export_parser.add_argument("--format", choices=["csv", "json", ], default="csv",
-                               help="Export format (default: csv)")
-    export_parser.add_argument("-o", "--output", type=str, default=None, help="Output file path")
-
+    """Main entry point for the CLI."""
+    parser = _create_parses()
     args = parser.parse_args()
 
-    if args.command == "start":
+    if args.command == 'start':
         tracker = TimeTracker(check_interval=args.interval)
         tracker.start()
 
-    elif args.command == "stats":
+    elif args.command == 'stop':
+        print("⏹️ Tracker stopping...")
+        print("  Use Ctrl+C in the terminal running the tracker")
+        print("  Or run: killall python3")
+
+    elif args.command == 'status':
+        _show_status()
+
+    elif args.command == 'stats':
         storage = JsonStorage()
         _show_stats(storage, args.days)
 
-    elif args.command == "stop":
-        print("⏹️ Tracker stopping...")
-        print("(use Ctrl+C in the terminal running the tracker)")
-        print(" Or press: killall python3")
+    elif args.command == 'export':
+        _handle_export(args.format, args.output)
 
-    elif args.command == "status":
-        _show_status()
+    elif args.command == 'autostart':
+        _handle_autostart(args.autostart_action, parser)
 
-    elif args.command == "tray":
+    elif args.command == 'tray':
         from src.gui.tray import TrayIcon
 
         tracker = TimeTracker()
         tray = TrayIcon(tracker)
         tray.run()
 
-    elif args.command == "autostart":
-        if args.autostart_action == "enable":
-            if enable():
-                print("✅ Autostart enabled")
-            else:
-                print("❌ Failed to enable autostart")
-
-        elif args.autostart_action == "disable":
-            if disable():
-                print("✅ Autostart disabled")
-            else:
-                print("⚠️ Autostart was not enabled")
-
-        elif args.autostart_action == "status":
-            if is_enabled():
-                print("✅ Autostart is enabled")
-            else:
-                print("❌ Autostart is disabled")
-
-        else:
-            autostart_parser.print_help()
-
-    elif args.command == "export":
-        from src.storage.exporter import DataExporter
-
-        storage = JsonStorage()
-        exporter = DataExporter(storage)
-
-        if args.format == "csv":
-            output = args.output or "stats_export.csv"
-            exporter.export_csv(output)
-        elif args.format == "json":
-            output = args.output or "stats_export.json"
-            exporter.export_json(output)
-
     else:
         parser.print_help()
-
 
 
 if __name__ == "__main__":
