@@ -4,28 +4,30 @@ Data models for the time tracker.
 This module defines the core data structures used throughout the application.
 """
 
+
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
+
 @dataclass
 class Session:
-    # Represents a single work session in a code editor.
+    """
+    Represents a single work session in a code editor.
+
+    Attributes:
+        editor: Name of the editor (e.g., 'PyCharm', 'VS Code').
+        language: Programming language detected from file extension.
+        file_path: Path tot the file being edited.
+        start_time: Timestamp when the session started.
+        end_time: Timestamp when the sessions ended (None if active)
+    """
 
     editor: str
-    # Name of the editor (e.g., 'PyCharm', "VS Code").
-
     language: Optional[str]
-    # Programming language detected from the file extension.
-
     file_path: Optional[str]
-    # Path to the file being edited.
-
     start_time: datetime
-    # Timestamp when the session started.
-
     end_time: Optional[datetime] = None
-    # Timestamp when the session ended (None if still active).
 
     def get_duration(self) -> int:
         """
