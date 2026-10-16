@@ -357,6 +357,41 @@ def _show_status() -> None:
             print("❌ Tracker is not running")
             print("    Start with: devtime start")
 
+
+# ======================================================================================
+# COMMAND DISPATCHER
+# ======================================================================================
+
+def _handle_autostart(action: Optional[str], parser: argparse.ArgumentParser) -> None:
+    """
+    Handle autostart command.
+
+    Args:
+        action: Action to perform (enable/disable/status).
+        parser: Autostart subparser (for help message).
+    """
+    if action == 'enable':
+        if enable():
+            print("✅ Autostart enabled")
+        else:
+            print("❌ Failed to enable autostart")
+
+    elif action == 'disable':
+        if disable():
+            print("✅ Autostart disabled")
+        else:
+            print("⚠️ Autostart was not enabled")
+
+    elif action == 'status':
+        if is_enabled():
+            print("✅ Autostart is enabled")
+        else:
+            print("❌ Autostart is disabled")
+
+    else:
+        parser.print_help()
+
+        
 def main():
     parser = argparse.ArgumentParser(
         description="DevTimeTracker - smart time tracker for developers",
