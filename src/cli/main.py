@@ -391,6 +391,25 @@ def _handle_autostart(action: Optional[str], parser: argparse.ArgumentParser) ->
     else:
         parser.print_help()
 
+
+def _handle_export(fmt: str, output: Optional[str]) -> None:
+    """
+    Handle export command.
+
+    Args:
+        fmt: Export format (csv/json).
+        output: Output file path.
+    """
+    from src.storage.exporter import DataExporter
+
+    storage = JsonStorage()
+    exporter = DataExporter(storage)
+
+    if fmt == 'csv':
+        exporter.export_csv(output or "stats_export.csv")
+    elif fmt == 'json':
+        exporter.export_json(output or "stats_export.json")
+
         
 def main():
     parser = argparse.ArgumentParser(
