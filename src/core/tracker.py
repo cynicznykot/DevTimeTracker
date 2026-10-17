@@ -96,7 +96,7 @@ class TimeTracker:
                 m = (seconds % 3600) // 60
                 print(f"{language}: {h}h {m}m")
 
-    def _get_active_editor(self):
+    def _get_active_editor(self) -> Optional[Tuple[str, str]]:
         """
         Detect the currently active code editor.
 
@@ -121,7 +121,7 @@ class TimeTracker:
         except Exception:
             return None
 
-    def _start_session(self, editor: str, language: Optional[str] = None) -> None:
+    def _start_session(self, editor: str, language: str) -> None:
         """
         Start a new work session.
 
@@ -199,7 +199,7 @@ class TimeTracker:
         This method begins the tracking loop. It displays initial statistics
         and continues tracking until stopped by the user (Ctrl+C).
 
-        The tracker wil check for active windows at regular intervals
+        The tracker will check for active windows at regular intervals
         defined by check_interval.
         """
         self.is_running = True
