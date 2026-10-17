@@ -78,7 +78,7 @@ def enable() -> bool:
     Enable autostart (platform-specific).
 
     Returns:
-        True is autostart was enables, False otherwise.
+        True if autostart was enables, False otherwise.
     """
     system = platform.system()
 
@@ -219,8 +219,7 @@ def _enable_macos() -> bool:
     plist_file.parent.mkdir(parents=True, exist_ok=True)
 
     plist_content = f"""<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/P
-ropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>Label</key>
@@ -241,10 +240,13 @@ ropertyList-1.0.dtd">
 </dict>
 </plist>
 """
-
-    plist_file.write_text(plist_content, encoding="utf-8")
-    print(f"✅ Autostart enabled: {plist_file}")
-    return True
+    try:
+        plist_file.write_text(plist_content, encoding="utf-8")
+        print(f"✅ Autostart enabled: {plist_file}")
+        return True
+    except OSError as e:
+        print(f"❌ Failed to create plist file: {e}")
+        return False 
 
 
 
