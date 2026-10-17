@@ -3,7 +3,7 @@ Cross-platform window management module.
 
 This module provides a unified interface for window detection across
 different operating system. It automatically selects the appropriate
-backed based on the current platform.
+backend based on the current platform.
 
 Supported platforms:
 - Linux: Uses xdotool (requires installation)
@@ -30,7 +30,7 @@ class Window:
 
     Attributes:
         window_id: Unique identifier for the window.
-        title: Window title text/
+        title: Window title text.
         isActive: Whether the window is currently in focus.
     """
     window_id: str
