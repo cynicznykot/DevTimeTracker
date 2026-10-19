@@ -57,7 +57,7 @@ class TrayIcon:
         self.icon: Optional[pystray.Icon] = None
         self.tracker_thread: Optional[threading.Thread] = None
 
-    def _start_tracker(self, icon, item):
+    def _start_tracker(self, icon: pystray.Icon, item: pystray.MenuItem) -> None:
         """Start the tracker in a separate thread."""
         if self.tracker_thread and self.tracker_thread.is_alive():
             print("⚠️ Tracker is already running")
@@ -73,26 +73,29 @@ class TrayIcon:
         if self.icon:
             self.icon.icon = create_icon('green')
 
-    def _stop_tracker(self, icon, item):
+    def _stop_tracker(self, icon: pystray.Icon, item: pystray.MenuItem) -> None:
         """Stop the tracker."""
-        self.tracker.stop()
-        print("⏹️ Tracker stopped")
+        if self.tracker.is_running:
+            self.tracker.stop()
+            print("⏹️ Tracker stopped")
+        else:
+            print("⚠️ Tracker is not running")
 
         if self.icon:
-            self.icon.icon = create_icon('red')
+            self.icon.icon = create_icon("red")
 
-    def _show_stats(self, icon, item):
+    def _show_stats(self, icon: pystray.Icon, item: pystray.MenuItem) -> None:
         """Show statistics window."""
         from src.gui.window import show_stats_window
         show_stats_window(self.tracker.storage)
 
-    def _quit(self, icon, item):
-        """Quit the aplication."""
+    def _quit(self, icon: pystray.Icon, item: pystray.MenuItem) -> None:
+        """Quit the application."""
         if self.tracker.is_running:
             self.tracker.stop()
         icon.stop()
 
-    def run(self):
+    def run(self) -> None:
         """Run the tray icon."""
         menu = pystray.Menu(
             item('▶️ Start Tracking', self._start_tracker),
