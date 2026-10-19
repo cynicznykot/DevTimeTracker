@@ -9,7 +9,8 @@ from tkinter import ttk
 
 from src.storage.json_storage import JsonStorage
 
-def show_stats_window(storage: JsonStorage):
+
+def show_stats_window(storage: JsonStorage) -> None:
     """
     Show a window with statistics.
 
@@ -51,7 +52,7 @@ def show_stats_window(storage: JsonStorage):
         for editor, seconds in sorted(stats.items(), key=lambda x: x[1], reverse=True):
             h = seconds // 3600
             m = (seconds % 3600) // 60
-            tree.insert("", tk.END, values=(editor, f"{h}h, {m}m"))
+            tree.insert("", tk.END, values=(editor, f"{h}h {m}m"))
 
         tree.pack(fill=tk.BOTH, expand=True)
     else:
