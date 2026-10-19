@@ -246,7 +246,7 @@ def _enable_macos() -> bool:
         return True
     except OSError as e:
         print(f"❌ Failed to create plist file: {e}")
-        return False 
+        return False
 
 
 
