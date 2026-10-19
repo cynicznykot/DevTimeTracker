@@ -31,7 +31,7 @@ class DataExporter:
         """
         self.storage = storage
 
-    def export_csv(self, file_path: str = "start_export.csv") -> bool:
+    def export_csv(self, file_path: str = "stats_export.csv") -> bool:
         """
         Export statistics to CSV file.
 
@@ -57,7 +57,7 @@ class DataExporter:
                     for editor_name, seconds in editors.items():
                         hours = seconds // 3600
                         minutes = (seconds % 3600) // 60
-                        writer.writerow([data, editor_name, seconds, hours, minutes])
+                        writer.writerow([date, editor_name, seconds, hours, minutes])
 
             print(f"✅ Exported to {file_path}")
             return True
