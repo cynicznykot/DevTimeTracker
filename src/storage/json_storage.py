@@ -13,7 +13,7 @@ File structure:
                 "VS Code": 1800
             },
             "2026-08-06": {
-                "PyCharmd":7200
+                "PyCharm": 7200
             }
         }
     }
@@ -37,7 +37,7 @@ class JsonStorage:
     JSON-based storage for time tracking statistics.
 
     This class handles reading and writing statistics to a JSON file.
-    Data is stored as daily stats per edition, allowing for easy querying
+    Data is stored as daily stats per editor, allowing for easy querying
     and aggregation.
 
     Attributes:
@@ -52,7 +52,6 @@ class JsonStorage:
 
         self.file_path = file_path
         self._ensure_file_exists()
-
 
     def _ensure_file_exists(self) -> None:
         """
@@ -71,7 +70,7 @@ class JsonStorage:
         Save data to the JSON file.
 
         Args:
-            data: Dictionary constaining the statistics data.
+            data: Dictionary containing the statistics data.
         """
 
         with open(self.file_path, 'w', encoding='utf-8') as f:
@@ -100,10 +99,10 @@ class JsonStorage:
 
     def add_time(self, date: str, editor: str, seconds: int) -> None:
         """
-        Add time ti the daily statistics for a specific editor.
+        Add time to the daily statistics for a specific editor.
 
         This method adds the specified seconds to the editor's total
-        for the given date. If the date of editor doesn't exist,
+        for the given date. If the date or editor doesn't exist,
         they are created automatically.
 
         Args:
@@ -153,7 +152,7 @@ class JsonStorage:
         """
         Get total statistics for all time, aggregated by editor.
 
-        This method sums up all the spent in each editor across all dates.
+        This method sums up all the time spent in each editor across all dates.
 
         Returns:
             Dictionary mapping editor names to total seconds across all time.
@@ -161,9 +160,9 @@ class JsonStorage:
         Example:
             >>> storage = JsonStorage()
             >>> stats = storage.get_all_stats()
-            >>> stats{'PyCharm': 7200, 'VS Code': 5400}
+            >>> stats
+            {'PyCharm': 7200, 'VS Code': 5400}
         """
-
         data = self.load_all()
         total_stats = {}
 
