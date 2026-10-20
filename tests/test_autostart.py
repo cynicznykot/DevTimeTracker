@@ -40,7 +40,7 @@ class TestGetAutostartPath:
     @patch("src.daemon.autostart.platform.system")
     def test_unsupported_os(self, mock_system):
         """Should raise OSError on unsupported OS."""
-        mock_system.return_value = 'FreeBDS'
+        mock_system.return_value = 'FreeBSD'
         with pytest.raises(OSError):
             autostart.get_autostart_path()
 
@@ -49,7 +49,7 @@ class TestIsEnabled:
     """Tests for is_enabled()."""
 
     @patch("src.daemon.autostart.get_autostart_path")
-    def test_enables(self, mock_path):
+    def test_enabled(self, mock_path):
         """Should return True if file exists."""
         mock_file = MagicMock()
         mock_file.exists.return_value = True
@@ -144,14 +144,15 @@ class TestEnableRouting:
         mock_linux.assert_called_once()
 
     @patch("src.daemon.autostart.platform.system")
-    @patch("src.daemon.autostart._enable_linux")
-    def test_routes_to_linux(self, mock_linux, mock_system):
-        """Should call _enable_linux on Linux."""
-        mock_system.return_value = 'Linux'
+    @patch("src.daemon.autostart._enable_windows")
+    def test_routes_to_windows(self, mock_win, mock_system):
+        """Should call _enable_windows on Windows."""
+        mock_system.return_value = 'Windows'
+        mock_win.return_value = True
 
         autostart.enable()
 
-        mock_linux.assert_called_once()
+        mock_win.assert_called_once()
 
     @patch("src.daemon.autostart.platform.system")
     @patch("src.daemon.autostart._enable_macos")
