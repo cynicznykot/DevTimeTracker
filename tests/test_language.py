@@ -1,20 +1,29 @@
-from src.core.detectors import EXTENSION_TO_LANGUAGE
+"""
+Tests for language detection.
 
-print("📊 Supported languages:")
-print("=" * 40)
+Verifies that all languages are correctly mapped.
+"""
 
-# Group of type
-languages = {}
+from src.core.detectors import EXTENSION_TO_LANGUAGE, detect_language_from_filename
 
-for ext, lang in EXTENSION_TO_LANGUAGE.items():
-    if lang not in languages:
-        languages[lang] = []
-    languages[lang].append(ext)
 
-# Displaying Statistics
-for lang, exts in sorted(languages.items()):
-    print(f"{lang}: {', '.join(exts)}")
+class TestLanguageMapping:
+    """Tests for EXTENSION_TO_LANGUAGE mapping."""
 
-print("\n" + "=" * 40)
-print(f"Total languages: {len(languages)}")
-print(f"Total extensions: {len(EXTENSION_TO_LANGUAGE)}")
+    def test_python(self):
+        """Should map .py to Python."""
+        assert EXTENSION_TO_LANGUAGE[".py"] == "Python"
+        assert EXTENSION_TO_LANGUAGE[".pyw"] == "Python"
+        assert EXTENSION_TO_LANGUAGE[".pyi"] == "Python"
+
+    def test_javascript(self):
+        """Should map .js to JavaScript."""
+        assert EXTENSION_TO_LANGUAGE[".js"] == "JavaScript"
+        assert EXTENSION_TO_LANGUAGE[".jsx"] == "React/JavaScript"
+
+    def test_typescript(self):
+        """Should map .ts to TypeScript."""
+        assert EXTENSION_TO_LANGUAGE[".ts"] == "TypeScript"
+        assert EXTENSION_TO_LANGUAGE[".tsx"] == "React/TypeScript"
+
+        

@@ -31,7 +31,7 @@ class TestDetectEditor:
     def test_intellij_idea(self):
         """Should detect IntelliJ IDEA."""
         assert detect_editor("Program.cs - Microsoft Visual Studio") == "Visual Studio"
-        
+
     def test_empty_title(self):
         """Should return None for empty title."""
         assert detect_editor("") is None
