@@ -26,4 +26,17 @@ class TestLanguageMapping:
         assert EXTENSION_TO_LANGUAGE[".ts"] == "TypeScript"
         assert EXTENSION_TO_LANGUAGE[".tsx"] == "React/TypeScript"
 
-        
+    def test_java(self):
+        """Should map .java to Java."""
+        assert EXTENSION_TO_LANGUAGE[".java"] == "Java"
+
+    def test_cpp(self):
+        """Should map .cpp to C++"""
+        assert EXTENSION_TO_LANGUAGE[".cpp"] == "C++"
+        assert EXTENSION_TO_LANGUAGE[".hpp"] == "C++ Header"
+
+    def test_dockerfile(self):
+        """Should map Dockerfile to Dockerfile."""
+        assert EXTENSION_TO_LANGUAGE["Dockerfile"] == "Dockerfile"
+
+    
