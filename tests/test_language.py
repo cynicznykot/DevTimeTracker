@@ -39,4 +39,25 @@ class TestLanguageMapping:
         """Should map Dockerfile to Dockerfile."""
         assert EXTENSION_TO_LANGUAGE["Dockerfile"] == "Dockerfile"
 
-    
+    def test_makefile(self):
+        """Should map Makefile to Makefile."""
+        assert EXTENSION_TO_LANGUAGE["Makefile"] == "MakeFile"
+
+    def test_unknown_extension(self):
+        """Should return None for unknown extension."""
+        assert detect_language_from_filename("file.xyz") is None
+
+    def test_all_languages_have_extensions(self):
+        """Should have at least 20 languages."""
+        assert len(EXTENSION_TO_LANGUAGE) >= 20
+
+    def test_no_empty_values(self):
+        """Should not have empty language names."""
+        for ext, lang in EXTENSION_TO_LANGUAGE.items():
+            assert lang, f"Empty language for extension {ext}"
+
+    def test_all_keys_are_strings(self):
+        """All keys should be strings."""
+        for ext in EXTENSION_TO_LANGUAGE.keys():
+            assert isinstance(ext, str)
+            assert len(ext) > 0
