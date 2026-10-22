@@ -123,7 +123,30 @@ class TestGetTotalTime:
         temp_storage.add_time("2026-09-23", "PyCharm", 1200)
 
 
+class TestLanguageStats:
+    """Tests for language statistics."""
 
+    def test_add_language_time(self, temp_storage):
+        """Should add time for a language."""
+        temp_storage.add_language_time("2026-09-24", "Python", 3600)
+        stats = temp_storage.get_language_stats()
+        assert stats == {"Python": 3600}
+
+    def test_add_multiple_language(self, temp_storage):
+        """Should track multiple languages."""
+        temp_storage.add_language_time("2026-09-24", "Python", 3600)
+        temp_storage.add_language_time("2026-09-24", "JavaScript", 1800)
+        stats = temp_storage.get_language_stats()
+        assert stats == {"Python": 3600, "JavaScript": 1800}
+
+    def test_accumulate_language_time(self, temp_storage):
+        """Should accumulate time fir same language."""
+        temp_storage.add_language_time("2026-09-24", "Python", 3600)
+        temp_storage.add_language_time("2026-09-24", "Python", 1800)
+        stats = temp_storage.get_language_stats()
+        assert stats == {"Python": 5400}
+
+        
 class TestClear:
     """Tests for clear() method."""
 
