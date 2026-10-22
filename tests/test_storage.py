@@ -121,6 +121,7 @@ class TestGetTotalTime:
         temp_storage.add_time("2026-09-24", "PyCharm", 3600)
         temp_storage.add_time("2026-09-24", "VS Code", 1800)
         temp_storage.add_time("2026-09-23", "PyCharm", 1200)
+        assert temp_storage.get_total_time() == 6600
 
 
 class TestLanguageStats:
@@ -140,13 +141,13 @@ class TestLanguageStats:
         assert stats == {"Python": 3600, "JavaScript": 1800}
 
     def test_accumulate_language_time(self, temp_storage):
-        """Should accumulate time fir same language."""
+        """Should accumulate time for same language."""
         temp_storage.add_language_time("2026-09-24", "Python", 3600)
-        temp_storage.add_language_time("2026-09-24", "Python", 1800)
+        temp_storage.add_language_time("2026-09-23", "Python", 1800)
         stats = temp_storage.get_language_stats()
         assert stats == {"Python": 5400}
 
-        
+
 class TestClear:
     """Tests for clear() method."""
 
