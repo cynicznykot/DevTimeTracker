@@ -104,6 +104,26 @@ class TestGetAllStats:
         assert stats == {"PyCharm": 4800, "VS Code": 1800}
 
 
+class TestGetTotalTime:
+    """Tests for get_total_time() method."""
+
+    def test_empty(self, temp_storage):
+        """Should return 0 when no data."""
+        assert temp_storage.get_total_time() == 0
+
+    def test_single_entry(self, temp_storage):
+        """Should return correct total."""
+        temp_storage.add_time("2026-09-24", "PyCharm", 3600)
+        assert temp_storage.get_total_time() == 3600
+
+    def test_multiple_entries(self, temp_storage):
+        """Should sum all time."""
+        temp_storage.add_time("2026-09-24", "PyCharm", 3600)
+        temp_storage.add_time("2026-09-24", "VS Code", 1800)
+        temp_storage.add_time("2026-09-23", "PyCharm", 1200)
+
+
+
 class TestClear:
     """Tests for clear() method."""
 
