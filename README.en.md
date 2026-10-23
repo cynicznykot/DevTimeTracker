@@ -125,18 +125,31 @@ Average/day:      2h 49m
 ## 🖥️ Supported Editors
 
 Editor	             Linux    Windows    macOS
+---
 PyCharm	               ✅	     ✅	       ✅
+---
 VS Code	               ✅	     ✅	       ✅
+---
 IntelliJ IDEA	       ✅	     ✅	       ✅
+---
 WebStorm	           ✅	     ✅	       ✅
+---
 PhpStorm	           ✅	     ✅	       ✅
+---
 CLion	               ✅	     ✅	       ✅
+---
 GoLand	               ✅	     ✅	       ✅
+---
 RubyMine	           ✅	     ✅	       ✅
+---
 Rider	               ✅	     ✅	       ✅
+---
 Android Studio	       ✅	     ✅	       ✅
+---
 Sublime Text	       ✅	     ✅	       ✅
+---
 Vim / Neovim	       ✅	     ✅	       ✅
+---
 ...and 15+ more	
 
 ## 📁 Project Structure
