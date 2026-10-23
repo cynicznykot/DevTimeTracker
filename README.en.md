@@ -169,17 +169,18 @@ Average/day:      2h 49m
 
 ```bash
 DevTimeTracker/
+DevTimeTracker/
 ├── src/
-│   ├── core/
-│   │   ├── detectors.py     # Editor and language detection
-│   │   └── tracker.py       # Main tracking logic
-│   ├── storage/
-│   │   └── json_storage.py  # JSON operations
-│   └── cli/
-│       └── main.py          # Entry point
-├── tests/                   # Tests
-├── config/                  # Configuration
-└── README.md
+│   ├── cli/              # Command-line interface
+│   ├── core/             # Core logic (tracker, detectors)
+│   ├── storage/          # Data persistence (JSON)
+│   ├── daemon/           # Autostart management
+│   └── gui/              # System tray icon
+├── tests/                # Tests
+├── setup.py              # Package configuration
+├── requirements.txt
+└── README.ru.md
+└── README.en.md
 ```
 
 ## 📝 Roadmap
