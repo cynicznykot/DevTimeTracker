@@ -35,6 +35,13 @@ you detailed statistics about your coding time.
 
 ## 🛠️ Installation
 
+### Requirements
+- Python 3.10+
+- Linux: `xdotool` (for window detection)
+- Windows: `pygetwindow` (installed automatically)
+
+### Quick Start
+
 ```bash
 > # Clone
 > git clone https://github.com/cynicznykot/DevTimeTracker.git
@@ -42,13 +49,14 @@ you detailed statistics about your coding time.
 > 
 > # Create virtual environment
 > python -m venv .venv
-> source .venv/bin/activate  # for Linux System
-> 
-> venv\Scripts\activate      # for Windows System
+> source .venv/bin/activate  # Linux/macOS
+> venv\Scripts\activate      # Windows
 > 
 > # Install dependencies
-> 
 >pip install -r requirements.txt
+
+# Install as a package
+pip install -e .
 ```
 
 ## 🚀 Usage
