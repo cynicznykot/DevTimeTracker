@@ -62,7 +62,33 @@ pip install -e .
 ## 🚀 Usage
  
 ```bash
-> python -m src.cli.main
+# Start tracking
+devtime start
+
+# Check statistics
+devtime stats
+
+# Show last 30 days
+devtime stats -d 30
+
+# Check status
+devtime status
+
+# Stop tracking
+devtime stop
+
+# Enable autostart
+devtime autostart enable
+
+# Disable autostart
+devtime autostart disable
+
+# Export statistics
+devtime export --format csv
+devtime export --format json
+
+# Run system tray icon
+devtime tray
 ```
 
 ## 📁 Project Structure
