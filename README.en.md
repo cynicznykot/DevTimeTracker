@@ -120,6 +120,25 @@ Average/day:      2h 49m
 2026-10-11: ██████████████████ 4h 30m
 ```
 
+---
+
+## 🖥️ Supported Editors
+
+Editor	             Linux    Windows    macOS
+PyCharm	               ✅	     ✅	       ✅
+VS Code	               ✅	     ✅	       ✅
+IntelliJ IDEA	       ✅	     ✅	       ✅
+WebStorm	           ✅	     ✅	       ✅
+PhpStorm	           ✅	     ✅	       ✅
+CLion	               ✅	     ✅	       ✅
+GoLand	               ✅	     ✅	       ✅
+RubyMine	           ✅	     ✅	       ✅
+Rider	               ✅	     ✅	       ✅
+Android Studio	       ✅	     ✅	       ✅
+Sublime Text	       ✅	     ✅	       ✅
+Vim / Neovim	       ✅	     ✅	       ✅
+...and 15+ more	
+
 ## 📁 Project Structure
 
 ```bash
