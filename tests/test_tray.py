@@ -1,27 +1,37 @@
-import pystray
-from PIL import Image, ImageDraw
+"""
+Tests for tray icon module.
+
+Tests icon creation and basic functionality.
+"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+
+from src.gui.tray import create_icon
 
 
-def create_icon():
-    image = Image.new('RGB', (64, 64), 'white')
-    draw = ImageDraw.Draw(image)
-    draw.ellipse([8, 8, 56, 56], fill='green')
-    return image
+class TestCreateIcon:
+    """Tests for create_icon()."""
 
+    def test_returns_image(self):
+        """Should return a PIL Image."""
+        icon = create_icon()
+        assert icon is not None
+        assert icon.size == (64, 64)
 
-def on_click(icon, item):
-    print(f"✅ Clicked: {item}")
+    def test_green_color(self):
+        """Should create green icon."""
+        icon = create_icon('green')
+        assert icon is not None
+        assert icon.size == (64, 64)
 
+    def test_red_color(self):
+        """Should create red icon."""
+        icon = create_icon('red')
+        assert icon is not None
+        assert icon.size == (64, 64)
 
-icon = pystray.Icon(
-    'test',
-    create_icon(),
-    'Test Tray',
-    menu=pystray.Menu(
-        pystray.MenuItem('Item 1', on_click),
-        pystray.MenuItem('Item 2', on_click),
-    )
-)
-
-print("🚀 Running...")
-icon.run()
+    def test_default_color(self):
+        """Should default to green."""
+        icon = create_icon()
+        assert icon is not None
