@@ -124,33 +124,48 @@ Average/day:      2h 49m
 
 ## 🖥️ Supported Editors
 
-Editor	             Linux    Windows    macOS
----
-PyCharm	               ✅	     ✅	       ✅
----
-VS Code	               ✅	     ✅	       ✅
----
-IntelliJ IDEA	       ✅	     ✅	       ✅
----
-WebStorm	           ✅	     ✅	       ✅
----
-PhpStorm	           ✅	     ✅	       ✅
----
-CLion	               ✅	     ✅	       ✅
----
-GoLand	               ✅	     ✅	       ✅
----
-RubyMine	           ✅	     ✅	       ✅
----
-Rider	               ✅	     ✅	       ✅
----
-Android Studio	       ✅	     ✅	       ✅
----
-Sublime Text	       ✅	     ✅	       ✅
----
-Vim / Neovim	       ✅	     ✅	       ✅
----
-...and 15+ more	
+## 🖥️ Supported Editors
+
+### JetBrains IDEs
+| Editor | Linux | Windows | macOS |
+|--------|:-----:|:-------:|:-----:|
+| PyCharm | ✅ | ✅ | ✅ |
+| IntelliJ IDEA | ✅ | ✅ | ✅ |
+| WebStorm | ✅ | ✅ | ✅ |
+| PhpStorm | ✅ | ✅ | ✅ |
+| CLion | ✅ | ✅ | ✅ |
+| GoLand | ✅ | ✅ | ✅ |
+| RubyMine | ✅ | ✅ | ✅ |
+| Rider | ✅ | ✅ | ✅ |
+| Android Studio | ✅ | ✅ | ✅ |
+
+### Microsoft IDEs
+| Editor | Linux | Windows | macOS |
+|--------|:-----:|:-------:|:-----:|
+| VS Code | ✅ | ✅ | ✅ |
+| Visual Studio | ❌ | ✅ | ❌ |
+
+### Cross-platform IDEs
+| Editor | Linux | Windows | macOS |
+|--------|:-----:|:-------:|:-----:|
+| Eclipse | ✅ | ✅ | ✅ |
+| NetBeans | ✅ | ✅ | ✅ |
+| Sublime Text | ✅ | ✅ | ✅ |
+| Atom | ✅ | ✅ | ✅ |
+| Geany | ✅ | ✅ | ✅ |
+
+### Terminal Editors
+| Editor | Linux | Windows | macOS |
+|--------|:-----:|:-------:|:-----:|
+| Vim | ✅ | ✅ | ✅ |
+| Neovim | ✅ | ✅ | ✅ |
+| Nano | ✅ | ❌ | ✅ |
+
+### Platform-specific
+| Editor | Linux | Windows | macOS |
+|--------|:-----:|:-------:|:-----:|
+| Xcode | ❌ | ❌ | ✅ |
+| Notepad++ | ❌ | ✅ | ❌ |
 
 ## 📁 Project Structure
 
