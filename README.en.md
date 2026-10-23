@@ -124,8 +124,6 @@ Average/day:      2h 49m
 
 ## 🖥️ Supported Editors
 
-## 🖥️ Supported Editors
-
 ### JetBrains IDEs
 | Editor | Linux | Windows | macOS |
 |--------|:-----:|:-------:|:-----:|
