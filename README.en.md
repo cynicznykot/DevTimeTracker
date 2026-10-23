@@ -169,7 +169,6 @@ Average/day:      2h 49m
 
 ```bash
 DevTimeTracker/
-DevTimeTracker/
 ├── src/
 │   ├── cli/              # Command-line interface
 │   ├── core/             # Core logic (tracker, detectors)
