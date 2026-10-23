@@ -23,10 +23,15 @@ you detailed statistics about your coding time.
 
 ## ✨ Features
 
-- 🖥️ Editor detection by windows title
-- 📊 Statistics by editor and language
-- 💾 JSON storage
-- 🔧 Flexible configuration
+- 🖥️ **Auto-detects 29+ editors** - PyCharm, VS Code, IntelliJ, WebStorm, Sublime, Vim and more
+- 🌍 **Cross-platform** - works on Linux, Windows, and macOS
+- 📊 **Detailed statistics** - time per editor, per day, per language
+- 💾 **Local storage** - your data stays on your machine (JSON)
+- 🚀 **CLI interface** - simple commands: `start`, `stats`, `status`, `stop`
+- 🔄 **Autostart** - starts automatically with your system
+- ⚡ **Lightweight** - minimal CPU and memory usage
+
+---
 
 ## 🛠️ Installation
 
