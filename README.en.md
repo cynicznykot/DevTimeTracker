@@ -1,17 +1,25 @@
-[![Tests](https://github.com/cynicznykot/DevTimeTracker/actions/workflows/tests.yml/badge.svg)](https://github.com/cynicznykot/DevTimeTracker/actions/workflows/tests.yml)
-
 # ⏱️ DevTimeTracker 
 
-Smart time tracker for developers
+> Smart time tracker for developers. Automatically tracks time spent in your favorite IDEs.
+
+[![Tests](https://github.com/cynicznykot/DevTimeTracker/actions/workflows/tests.yml/badge.svg)](https://github.com/cynicznykot/DevTimeTracker/actions/workflows/tests.yml)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg)]()
+
+---
 
 ## 🎯 What is it?
 
-DevTimeTracker is a useful tool for tracking time spent in code editors.
-It automatically detects:
+**DevTimeTracker** is a lightweight, cross-platform tool that automatically tracks 
+how much time you spend in code editors like **PyCharm**, **VS Code**, **IntelliJ IDEA**,
+and many more.
 
-- **Witch editors** you're working in (PyCharm, VS Code, Visual Studio и др.)
-- **Witch language** programming you're coding in (Python, JavaScript, C# и др.)
-- **How much time** you've spent on each language and editor.
+Just install it, run it, and forget about it - it works in the background and gives 
+you detailed statistics about your coding time.
+
+---
+
 
 ## ✨ Features
 
