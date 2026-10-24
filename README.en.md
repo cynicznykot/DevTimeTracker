@@ -229,4 +229,4 @@ This project is licensed under the MIT License — see the LICENSE file for deta
 **cynicznykot**
 
 - GitHub: [@cynicznykot](https://github.com/cynicznykot)
-- Проект: [DevTimeTracker](https://github.com/cynicznykot/DevTimeTracker)
+- Project: [DevTimeTracker](https://github.com/cynicznykot/DevTimeTracker)
