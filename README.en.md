@@ -184,16 +184,24 @@ DevTimeTracker/
 
 ## 📝 Roadmap
 
-```bash
-- [ ] ⏳ Editor detection by window title
-- [ ] ⏳ Language detection by extension
-- [ ] ⏳ Tracking loop
-- [ ] ⏳ Statistics storage
-- [ ] ⏳ Reports and visualization
-- [ ] ⏳ Auto-pause on inactivity
-- [ ] ⏳ GUI
-- [ ] ⏳ CSV/Excel export
-```
+### ✅ Done
+- [x] Editor detection (29+ IDEs)
+- [x] Language detection (30+ languages)
+- [x] Time tracking with session management
+- [x] JSON storage
+- [x] CLI interface
+- [x] Cross-platform support (Linux, Windows, macOS)
+- [x] Autostart (Linux, Windows, macOS)
+- [x] Notifications
+- [x] Export to CSV/JSON
+
+### 🚧 In Progress
+- [ ] System tray icon (WIP)
+
+### 📋 Planned
+- [ ] Web dashboard
+- [ ] Cloud sync
+- [ ] PyPI publication
 
 ## 📄 License
 
