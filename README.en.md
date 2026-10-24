@@ -53,7 +53,7 @@ you detailed statistics about your coding time.
 > venv\Scripts\activate      # Windows
 > 
 > # Install dependencies
->pip install -r requirements.txt
+> pip install -r requirements.txt
 
 # Install as a package
 pip install -e .
