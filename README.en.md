@@ -203,9 +203,26 @@ DevTimeTracker/
 - [ ] Cloud sync
 - [ ] PyPI publication
 
+
+## 🧪 Testing
+```bash
+# Run all tests
+pytest tests/ -v
+
+# Run with coverage
+pytest tests/ --cov=src
+```
+
+## 🤝 Contributing
+Contributions are welcome! Feel free to:
+
+- Report bugs
+- Suggest new features
+- Submit pull requests
+
 ## 📄 License
 
-Distributed under the MIT. See the LICENSE file for details.
+This project is licensed under the MIT License — see the LICENSE file for details.
 
 ## 🐱 Author
 
