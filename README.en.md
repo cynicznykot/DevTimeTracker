@@ -169,17 +169,59 @@ Average/day:      2h 49m
 
 ```bash
 DevTimeTracker/
-├── src/
-│   ├── cli/              # Command-line interface
-│   ├── core/             # Core logic (tracker, detectors)
-│   ├── storage/          # Data persistence (JSON)
-│   ├── daemon/           # Autostart management
-│   └── gui/              # System tray icon
-├── tests/                # Tests
-├── setup.py              # Package configuration
-├── requirements.txt
-└── README.ru.md
-└── README.en.md
+├── src/                      # Source code
+│   ├── cli/                  # Command-line interface
+│   │   ├── __init__.py       # Makes cli a Python package
+│   │   └── main.py           # CLI entry point
+│   │
+│   ├── core/                 # Core logic
+│   │   ├── __init__.py       # Makes core a Python package
+│   │   ├── detectors.py      # Editor and language detection
+│   │   ├── models.py         # Data models (Session)
+│   │   ├── notifier.py       # Cross-platform notifications
+│   │   ├── tracker.py        # Main time tracker
+│   │   └── window_manager.py # Cross-platform window detection
+│   │
+│   ├── daemon/               # Autostart management
+│   │   ├── __init__.py       # Makes daemon a Python package
+│   │   └── autostart.py      # Manage OS autostart (Linux/Win/macOS)
+│   │
+│   ├── gui/                  # GUI components
+│   │   ├── icons/            # App icons
+│   │   ├── __init__.py       # Makes gui a Python package
+│   │   ├── tray.py           # System tray icon
+│   │   └── window.py         # Statistics window
+│   │
+│   ├── storage/              # Data persistence
+│   │   ├── __init__.py       # Makes storage a Python package
+│   │   ├── exporter.py       # Export to CSV/JSON
+│   │   └── json_storage.py   # JSON database
+│   │
+│   └── __init__.py
+│
+├── tests/                    # Test suite
+│   ├── __init__.py           # Makes tests a Python package
+│   ├── conftest.py           # Pytest configuration
+│   ├── test_autostart.py     # Tests for autostart
+│   ├── test_detectors.py     # Tests for detectors
+│   ├── test_language.py      # Tests for language mapping
+│   ├── test_manual.py        # Manual detection tests
+│   ├── test_storage.py       # Tests for JSON storage
+│   ├── test_tracker.py       # Tests for time tracker
+│   └── test_tray.py          # Tests for tray icon
+│
+├── .github/
+│   └── workflows/
+│       └── tests.yml         # CI/CD pipeline
+│
+├── .gitignore                # Git ignore rules (venv, cache, builds)
+├── install_deps.py           # Dependency installer script
+├── LICENSE                   # MIT License
+├── README.md                 # Main documentation (navigation hub)
+├── README.ru.md              # Documentation (Russian)
+├── README.en.md              # Documentation (English)
+├── requirements.txt          # Dependencies 
+└── setup.py                  # Package configuration
 ```
 
 ## 📝 Roadmap
