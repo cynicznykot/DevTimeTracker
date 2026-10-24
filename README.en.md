@@ -165,6 +165,8 @@ Average/day:      2h 49m
 | Xcode | ❌ | ❌ | ✅ |
 | Notepad++ | ❌ | ✅ | ❌ |
 
+---
+
 ## 📁 Project Structure
 
 ```bash
