@@ -9,6 +9,23 @@
 
 ---
 
+## 📑 Table of Contents
+
+- [What is it?](#-what-is-it)
+- [Feature](#-features)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Example Output](#-example-output)
+- [Supported Editors](#-supported-editors)
+- [Project Structure](#-project-structure)
+- [Roadmap](#-roadmap)
+- [Testing](#-testing)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Author](#-author)
+
+---
+
 ## 🎯 What is it?
 
 **DevTimeTracker** is a lightweight, cross-platform tool that automatically tracks 
@@ -19,7 +36,6 @@ Just install it, run it, and forget about it - it works in the background and gi
 you detailed statistics about your coding time.
 
 ---
-
 
 ## ✨ Features
 
@@ -43,17 +59,17 @@ you detailed statistics about your coding time.
 ### Quick Start
 
 ```bash
-> # Clone
-> git clone https://github.com/cynicznykot/DevTimeTracker.git
-> cd DevTimeTracker
-> 
-> # Create virtual environment
-> python -m venv .venv
-> source .venv/bin/activate  # Linux/macOS
-> venv\Scripts\activate      # Windows
-> 
-> # Install dependencies
-> pip install -r requirements.txt
+# Clone
+git clone https://github.com/cynicznykot/DevTimeTracker.git
+cd DevTimeTracker
+
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+venv\Scripts\activate      # Windows
+ 
+# Install dependencies
+pip install -r requirements.txt
 
 # Install as a package
 pip install -e .
