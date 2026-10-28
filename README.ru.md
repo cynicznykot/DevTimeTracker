@@ -1,8 +1,29 @@
-[![Tests](https://github.com/cynicznykot/DevTimeTracker/actions/workflows/tests.yml/badge.svg)](https://github.com/cynicznykot/DevTimeTracker/actions/workflows/tests.yml)
-
 # ⏱️ DevTimeTracker 
 
-Умный трекер времени для разработчиков
+> Умный трекер времени для разработчиков. Автоматически отслеживает время, проведённое в ваших любимых IDEю
+
+[![Tests](https://github.com/cynicznykot/DevTimeTracker/actions/workflows/tests.yml/badge.svg)](https://github.com/cynicznykot/DevTimeTracker/actions/workflows/tests.yml)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg)]()
+
+---
+
+## 📑 Содержание
+
+- [Что это?](#-что-это)
+- [Возможности](#-возможности)- [Установка](#️-установка)
+- [Использование](#-использование)
+- [Пример вывода](#-пример-вывода)
+- [Поддерживаемые редакторы](#-поддерживаемые-редакторы)
+- [Структура проекта](#-структура-проекта)
+- [Планы](#-планы)
+- [Тестирование](#-тестирование)
+- [Участие](#-участие)
+- [Лицензия](#-лицензия)
+- [Автор](#-автор)
+
+---
 
 ## 🎯 Что это?
 
