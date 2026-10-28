@@ -50,20 +50,28 @@
 
 ## 🛠️ Установка
 
+### Требования
+- Python 3.10+
+- Linux: `xdotool` (для определения окон)
+- Windows: `pygetwindow` (устанавливается автоматически)
+
+### Быстрый старт
+
 ```bash
-> # Клонирование
-> git clone https://github.com/cynicznykot/DevTimeTracker.git
-> cd DevTimeTracker
-> 
-> # Создание виртуального окружэения
-> python -m venv .venv
-> source .venv/bin/activate  # for Linux System
-> 
-> venv\Scripts\activate      # for Windows System
-> 
-> # Установка зависимостей
-> 
->pip install -r requirements.txt
+# Клонирование
+git clone https://github.com/cynicznykot/DevTimeTracker.git
+cd DevTimeTracker
+
+# Создание виртуального окружэения
+python -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+venv\Scripts\activate      # Windows
+
+# Установка зависимостей
+pip install -r requirements.txt
+
+# Установка как пакет
+pip install -e.
 ```
 
 ## 🚀 Использование
