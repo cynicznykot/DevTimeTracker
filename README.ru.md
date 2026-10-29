@@ -158,7 +158,7 @@ Average/day:      2h 49m
 | VS Code | ✅ | ✅ | ✅ |
 | Visual Studio | ❌ | ✅ | ❌ |
 
-### Cross-platform IDEs
+### Кроссплатформенные IDEs
 | Editor | Linux | Windows | macOS |
 |--------|:-----:|:-------:|:-----:|
 | Eclipse | ✅ | ✅ | ✅ |
@@ -167,14 +167,14 @@ Average/day:      2h 49m
 | Atom | ✅ | ✅ | ✅ |
 | Geany | ✅ | ✅ | ✅ |
 
-### Terminal Editors
+### Терминальные редакторы
 | Editor | Linux | Windows | macOS |
 |--------|:-----:|:-------:|:-----:|
 | Vim | ✅ | ✅ | ✅ |
 | Neovim | ✅ | ✅ | ✅ |
 | Nano | ✅ | ❌ | ✅ |
 
-### Platform-specific
+### Платформенные редакторы
 | Editor | Linux | Windows | macOS |
 |--------|:-----:|:-------:|:-----:|
 | Xcode | ❌ | ❌ | ✅ |
@@ -186,17 +186,59 @@ Average/day:      2h 49m
 
 ```bash
 DevTimeTracker/
-├── src/
-│   ├── core/
-│   │   ├── detectors.py     # Определение редакторов и языков
-│   │   └── tracker.py       # Основная логика трекера
-│   ├── storage/
-│   │   └── json_storage.py  # Работа с JSON
-│   └── cli/
-│       └── main.py          # Точка входа
-├── tests/                   # Тесты
-├── config/                  # Конфигурация
-└── README.md
+├── src/                      # Исходный код
+│   ├── cli/                  # Интерфейс командной строки
+│   │   ├── __init__.py       # Делает cli Python-пакетом
+│   │   └── main.py           # Точка входа CLI
+│   │
+│   ├── core/                 # Основная логика
+│   │   ├── __init__.py       # Делает core Python-пакетом
+│   │   ├── detectors.py      # Определение редакторов и языков
+│   │   ├── models.py         # Модели данных (Session)
+│   │   ├── notifier.py       # Кроссплатформенные уведомления
+│   │   ├── tracker.py        # Основной трекер времени
+│   │   └── window_manager.py # Кроссплатформенное определение окон
+│   │
+│   ├── daemon/               # Управление автозапуском
+│   │   ├── __init__.py       # Делает daemon Python-пакетом
+│   │   └── autostart.py      # Управление автозапуском (Linux/Win/macOS)
+│   │
+│   ├── gui/                  # GUI-компоненты
+│   │   ├── icons/            # Иконки приложения
+│   │   ├── __init__.py       # Делает gui Python-пакетом 
+│   │   ├── tray.py           # Иконка в системном трее
+│   │   └── window.py         # Окно статистики
+│   │
+│   ├── storage/              # Хранение данных
+│   │   ├── __init__.py       # Делает storage Python-пакетом
+│   │   ├── exporter.py       # Экспорт в CSV/JSON
+│   │   └── json_storage.py   # JSON-база данных
+│   │
+│   └── __init__.py
+│
+├── tests/                    # Тесты
+│   ├── __init__.py           # Делает tests Python-пакетом
+│   ├── conftest.py           # Конфигурация Pytest
+│   ├── test_autostart.py     # Тесты для автозапуска
+│   ├── test_detectors.py     # Тесты для детекторов
+│   ├── test_language.py      # Тесты для языком
+│   ├── test_manual.py        # Ручные тесты
+│   ├── test_storage.py       # Тесты для JSON-хранилища
+│   ├── test_tracker.py       # Тесты для трекера
+│   └── test_tray.py          # Тесты для иконки в трее
+│
+├── .github/
+│   └── workflows/
+│       └── tests.yml         # CI/CD пайплайн
+│
+├── .gitignore                # Git ignore rules (venv, кэш, сборки)
+├── install_deps.py           # Установщик зависимостей
+├── LICENSE                   # MIT License
+├── README.md                 # Главная документация (хаб)
+├── README.ru.md              # Документация (Русский)
+├── README.en.md              # Документация (English)
+├── requirements.txt          # Зависимости
+└── setup.py                  # Конфигурация пакета
 ```
 
 ## 📝 Дорожная Карта
