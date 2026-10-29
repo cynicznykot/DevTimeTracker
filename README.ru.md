@@ -77,9 +77,63 @@ pip install -e.
 ## 🚀 Использование
  
 ```bash
-> python -m src.cli.main
+# Запуск трекера
+devtime start
+
+# Статистика
+devtime stats
+
+# Статистика за 30 дней
+devtime stats -d 30
+
+# Статус
+devtime status
+
+# Остановка
+devtime stop
+
+# Включить автозапуск
+devtime autostart enable
+
+# Выключить автозапуск
+devtime autostart disable
+
+# Экспорт статистики
+devtime export --format csv
+devtime export --format json
+
+# Иконка в трее
+devtime tray
 ```
 
+---
+
+## 📊 Пример вывода
+
+```text
+📊 STATISTICS FOR ALL TIME
+========================================
+Total time:       42h 15m
+Days tracked:     15
+Average/day:      2h 49m
+🔥 Streak:         5 days in a row!
+
+🖥️ BY EDITOR:
+  PyCharm  : ███████████████ 28h 30m (67%)
+  VS Code  : █████ 10h 45m (25%)
+  IntelliJ : █ 3h 0m (8%)
+
+📝 BY LANGUAGE:
+  Python   : ███████████████ 28h 30m (67%)
+  JavaScript: █████ 10h 45m (25%)
+  HTML/CSS : █ 3h 0m (8%)
+
+📅 LAST 7 DAYS
+========================================
+2026-10-13: ████████████████████ 5h 00m
+2026-10-12: █████████████ 3h 15m
+2026-10-11: ██████████████████ 4h 30m
+```
 ## 📁 Структура проекта
 
 ```bash
