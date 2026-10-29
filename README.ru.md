@@ -1,6 +1,6 @@
 # ⏱️ DevTimeTracker 
 
-> Умный трекер времени для разработчиков. Автоматически отслеживает время, проведённое в ваших любимых IDEю
+> Умный трекер времени для разработчиков. Автоматически отслеживает время, проведённое в ваших любимых IDE.
 
 [![Tests](https://github.com/cynicznykot/DevTimeTracker/actions/workflows/tests.yml/badge.svg)](https://github.com/cynicznykot/DevTimeTracker/actions/workflows/tests.yml)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
@@ -12,12 +12,13 @@
 ## 📑 Содержание
 
 - [Что это?](#-что-это)
-- [Возможности](#-возможности)- [Установка](#️-установка)
+- [Возможности](#-возможности)
+- [Установка](#-установка)
 - [Использование](#-использование)
 - [Пример вывода](#-пример-вывода)
 - [Поддерживаемые редакторы](#-поддерживаемые-редакторы)
 - [Структура проекта](#-структура-проекта)
-- [Планы](#-планы)
+- [Дорожная карта](#-дорожная-карта)
 - [Тестирование](#-тестирование)
 - [Участие](#-участие)
 - [Лицензия](#-лицензия)
@@ -62,7 +63,7 @@
 git clone https://github.com/cynicznykot/DevTimeTracker.git
 cd DevTimeTracker
 
-# Создание виртуального окружэения
+# Создание виртуального окружения
 python -m venv .venv
 source .venv/bin/activate  # Linux/macOS
 venv\Scripts\activate      # Windows
@@ -71,12 +72,12 @@ venv\Scripts\activate      # Windows
 pip install -r requirements.txt
 
 # Установка как пакет
-pip install -e.
+pip install -e .
 ```
 
 ## 🚀 Использование
  
-```bash
+```markdown
 # Запуск трекера
 devtime start
 
@@ -221,7 +222,7 @@ DevTimeTracker/
 │   ├── conftest.py           # Конфигурация Pytest
 │   ├── test_autostart.py     # Тесты для автозапуска
 │   ├── test_detectors.py     # Тесты для детекторов
-│   ├── test_language.py      # Тесты для языком
+│   ├── test_language.py      # Тесты для языков
 │   ├── test_manual.py        # Ручные тесты
 │   ├── test_storage.py       # Тесты для JSON-хранилища
 │   ├── test_tracker.py       # Тесты для трекера
@@ -256,7 +257,7 @@ DevTimeTracker/
 - [x] Экспорт в CSV/JSON
 
 ### 🚧 В процессе
-- [ ] Иконца в трее (WIP)
+- [ ] Иконка в трее (WIP)
 
 ### 📋 В планах
 - [ ] Веб-дашборд
@@ -264,9 +265,25 @@ DevTimeTracker/
 - [ ] Публикация на PyPI 
 ```
 
+## 🧪 Тестирование
+```bash
+# Запуск всех тестов
+pytest tests/ -v
+
+# С покрытием
+pytest tests/ --cov=src
+```
+
+## 🤝 Участие
+Приветствуются любые вклады:
+
+- Сообщайте об ошибках
+- Предлагайте новые функции
+- Отправляйте pull request'ы
+
 ## 📄 Лицензия
 
-Распространяется под лицензией **MIT**. См. файл [LICENSE](LICENSE) для подробностей.
+Проект распространяется под лицензией MIT - см. [LICENSE](LICENSE)
 
 ## 🐱 Автор
 
