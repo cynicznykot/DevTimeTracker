@@ -134,6 +134,54 @@ Average/day:      2h 49m
 2026-10-12: █████████████ 3h 15m
 2026-10-11: ██████████████████ 4h 30m
 ```
+
+---
+
+## 🖥️ Поддерживаемые редакторы
+
+### JetBrains IDEs
+| Editor | Linux | Windows | macOS |
+|--------|:-----:|:-------:|:-----:|
+| PyCharm | ✅ | ✅ | ✅ |
+| IntelliJ IDEA | ✅ | ✅ | ✅ |
+| WebStorm | ✅ | ✅ | ✅ |
+| PhpStorm | ✅ | ✅ | ✅ |
+| CLion | ✅ | ✅ | ✅ |
+| GoLand | ✅ | ✅ | ✅ |
+| RubyMine | ✅ | ✅ | ✅ |
+| Rider | ✅ | ✅ | ✅ |
+| Android Studio | ✅ | ✅ | ✅ |
+
+### Microsoft IDEs
+| Editor | Linux | Windows | macOS |
+|--------|:-----:|:-------:|:-----:|
+| VS Code | ✅ | ✅ | ✅ |
+| Visual Studio | ❌ | ✅ | ❌ |
+
+### Cross-platform IDEs
+| Editor | Linux | Windows | macOS |
+|--------|:-----:|:-------:|:-----:|
+| Eclipse | ✅ | ✅ | ✅ |
+| NetBeans | ✅ | ✅ | ✅ |
+| Sublime Text | ✅ | ✅ | ✅ |
+| Atom | ✅ | ✅ | ✅ |
+| Geany | ✅ | ✅ | ✅ |
+
+### Terminal Editors
+| Editor | Linux | Windows | macOS |
+|--------|:-----:|:-------:|:-----:|
+| Vim | ✅ | ✅ | ✅ |
+| Neovim | ✅ | ✅ | ✅ |
+| Nano | ✅ | ❌ | ✅ |
+
+### Platform-specific
+| Editor | Linux | Windows | macOS |
+|--------|:-----:|:-------:|:-----:|
+| Xcode | ❌ | ❌ | ✅ |
+| Notepad++ | ❌ | ✅ | ❌ |
+
+---
+
 ## 📁 Структура проекта
 
 ```bash
