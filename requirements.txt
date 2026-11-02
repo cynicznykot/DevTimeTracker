@@ -1,2 +1,10 @@
-typing-extensions
-pygetwindow==0.0.9
+# Core dependencies
+typing-extensions>=4.0.0
+
+# Cross-platform dependencies
+pygetwindow>=0.0.9; sys_platform == 'win32'
+pywin32>=305; sys_platform == 'win32'
+
+# GUI dependencies (for system tray)
+pystray>=0.19.0
+Pillow>=10.0.0
