@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "devtime-tracker"
+version = "0.1.0"
+description = "Smart time tracker for developers. Automatically tracks time in IDEs."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Cynicznykot", email = "iotajot@gmail.com"}
+]
+keywords = ["time tracker", "productivity", "developers", "ide", "pycharm", "vscode"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Productivity",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "typing-extensions>=4.0.0",
+    "pygetwindow>=0.0.9; sys_platform == 'win32'",
+    "pywin32>=305; sys_platform == 'win32'",
+    "pystray>=0.19.0",
+    "Pillow>=10.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/cynicznykot/DevTimeTracker"
+Documentation = "https://github.com/cynicznykot/DevTimeTracker/blob/master/README.md"
+Repository = "https://github.com/cynicznykot/DevTimeTracker"
+Issues = "https://github.com/cynicznykot/DevTimeTracker/issues"
+
+[project.scripts]
+devtime = "src.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
